@@ -1,3 +1,4 @@
+
 import type { Vaccine, Milestone, NutritionTip } from './types';
 import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users } from 'lucide-react';
 
@@ -46,7 +47,7 @@ export const NUTRITION_TIPS: NutritionTip[] = [
 
 export const MOCK_CHILD_PROFILE = {
   id: DEFAULT_CHILD_ID,
-  name: "Bernardo",
+  name: "Luís Marinho",
   dob: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split('T')[0], // Approx 1 year old
   profilePictureUrl: "https://placehold.co/100x100.png"
 };
