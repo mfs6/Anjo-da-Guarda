@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, ChangeEvent, useEffect } from 'react';
@@ -31,17 +32,23 @@ export function ProfileEditor() {
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
-    // Default values are set in useEffect to correctly reflect localStorage state
+    defaultValues: { // Initialize with empty strings to ensure controlled inputs
+      name: '',
+      dob: '',
+      profilePictureUrl: '',
+    },
   });
   
   useEffect(() => {
+    // This effect populates the form with data from localStorage or MOCK_CHILD_PROFILE
+    // once 'profile' is available or changes.
     form.reset({
       name: profile.name || '',
       dob: profile.dob || '',
       profilePictureUrl: profile.profilePictureUrl || '',
     });
     setPreviewImage(profile.profilePictureUrl || null);
-  }, [profile, form]);
+  }, [profile, form.reset]); // Using form.reset is more precise for dependencies
 
 
   const handleImageFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +93,7 @@ export function ProfileEditor() {
             <CardContent className="space-y-6">
               <div className="flex flex-col items-center space-y-4">
                 <Avatar className="w-32 h-32 border-4 border-primary shadow-md">
-                  <AvatarImage src={previewImage || "https://placehold.co/200x200.png"} alt={profile.name} data-ai-hint="child avatar" />
+                  <AvatarImage src={previewImage || "https://placehold.co/200x200.png"} alt={form.watch('name') || "Avatar"} data-ai-hint="child avatar" />
                   <AvatarFallback className="text-4xl">{form.watch('name')?.[0]?.toUpperCase() || 'A'}</AvatarFallback>
                 </Avatar>
                 <FormField
@@ -167,3 +174,5 @@ export function ProfileEditor() {
     </div>
   );
 }
+
+    
