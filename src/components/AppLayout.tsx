@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -24,15 +25,16 @@ import { Card } from "./ui/card";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const { isMobile } = useSidebar();
+  const sidebarContext = useSidebar();
+  const isMobile = sidebarContext.isMobile;
 
   return (
     <>
       <Sidebar side="left" variant="sidebar" collapsible={isMobile ? "offcanvas" : "icon"}>
         <SidebarHeader className="p-4 border-b border-sidebar-border">
           <div className="flex items-center justify-between">
-            <AppLogo showText={!useSidebar().open && !isMobile ? false : true} />
-            {isMobile && <SidebarTrigger />}
+            <AppLogo showText={isMobile ? true : sidebarContext.open} />
+            {/* Mobile trigger is now in the main header */}
           </div>
         </SidebarHeader>
         <SidebarContent className="p-0">
@@ -62,7 +64,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b bg-background/80 backdrop-blur-sm px-6">
-          {!isMobile && <SidebarTrigger className="hidden md:flex" />}
+          {isMobile ? (
+            <SidebarTrigger className="md:hidden" /> /* Show only on mobile */
+          ) : (
+            <SidebarTrigger className="hidden md:flex" /> /* Show only on desktop */
+          )}
           <div className="flex-1">
             <h1 className="text-xl font-semibold font-headline">
               {NAV_ITEMS.find(item => pathname.startsWith(item.href))?.title || APP_NAME}
