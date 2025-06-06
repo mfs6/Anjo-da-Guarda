@@ -1,5 +1,5 @@
 
-import type { Vaccine, Milestone, NutritionTip } from './types';
+import type { Vaccine, Milestone, NutritionTip, ChildProfile } from './types';
 import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users } from 'lucide-react';
 
 export const APP_NAME = "Anjo da Guarda";
@@ -45,20 +45,30 @@ export const NUTRITION_TIPS: NutritionTip[] = [
   { id: 'tip6', ageGroup: '1-2 anos', title: 'Evite Ultraprocessados', content: 'Limite o consumo de alimentos ultraprocessados, ricos em açúcar, sal e gorduras ruins.' },
 ];
 
-export const MOCK_CHILD_PROFILE = {
+export const MOCK_CHILD_PROFILE: ChildProfile = {
   id: DEFAULT_CHILD_ID,
   name: "Luís Marinho",
-  dob: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split('T')[0], // Approx 1 year old
+  dob: "2023-03-15", // Static DOB for consistency
   profilePictureUrl: "https://placehold.co/100x100.png"
 };
 
 // Function to calculate age in months (simplified)
 export const calculateAgeInMonths = (dobString: string): number => {
+  if (!dobString) return 0; // Handle cases where dobString might be undefined or empty
   const dob = new Date(dobString);
+  if (isNaN(dob.getTime())) return 0; // Handle invalid date strings
+
   const today = new Date();
   let months = (today.getFullYear() - dob.getFullYear()) * 12;
   months -= dob.getMonth();
   months += today.getMonth();
+  
+  // Adjust if the current day of the month is before the DOB day of the month
+  // This handles cases where the month difference is calculated but the full month hasn't passed yet.
+  // For example, DOB is 2023-03-15, today is 2024-03-10. This is 11 full months, not 12.
+  if (today.getDate() < dob.getDate()) {
+    months--;
+  }
+  
   return months <= 0 ? 0 : months;
 };
-
