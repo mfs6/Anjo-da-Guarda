@@ -13,42 +13,35 @@ import { addMonths, format, differenceInCalendarDays, parseISO } from 'date-fns'
 
 // Enhanced logic to update vaccine status based on age and due dates
 const getUpdatedVaccineStatus = (vaccine: Vaccine, childDob: string): Vaccine => {
-  // If childDob is not available (e.g., profile not loaded yet), return vaccine with its current status
-  // or default recommendedDate to undefined if not already set.
   if (!childDob) {
-    return { ...vaccine, recommendedDate: vaccine.recommendedDate || undefined };
+    return { ...vaccine, recommendedDate: vaccine.recommendedDate || undefined, status: vaccine.status };
   }
 
-  const ageInMonths = calculateAgeInMonths(childDob); // Uses client's new Date()
+  const ageInMonths = calculateAgeInMonths(childDob); 
   
   let dueAgeInMonths: number;
   if (vaccine.ageDue.toLowerCase() === 'ao nascer') {
     dueAgeInMonths = 0;
   } else {
     const match = vaccine.ageDue.match(/(\d+)\s*mes(es)?/);
-    // Ensure match and match[1] are valid before parsing, default to a very large number if not parseable
     dueAgeInMonths = (match && match[1]) ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
   }
 
-  let recommendedDateDt = new Date(childDob); // Default to DOB if dueAgeInMonths is not finite
+  let recommendedDateDt = new Date(childDob); 
   if (isFinite(dueAgeInMonths)) {
       recommendedDateDt = addMonths(new Date(childDob), dueAgeInMonths);
   }
   
-  const today = new Date(); // Uses client's new Date()
-  today.setHours(0,0,0,0); // Normalize today to start of day
-  recommendedDateDt.setHours(0,0,0,0); // Normalize recommendedDate to start of day
+  const today = new Date(); 
+  today.setHours(0,0,0,0); 
+  recommendedDateDt.setHours(0,0,0,0); 
 
   let currentStatus: Vaccine['status'] = vaccine.status;
   
-  // Only update status from 'pending' to 'missed' or keep as 'pending'.
-  // 'administered' status is set by user action and should persist.
   if (vaccine.status !== 'administered') {
     if (isFinite(dueAgeInMonths) && differenceInCalendarDays(today, recommendedDateDt) > 30 && ageInMonths > dueAgeInMonths) {
         currentStatus = 'missed';
     } else {
-        // If not missed, and not administered, it's pending.
-        // This also handles cases where dueAgeInMonths might be MAX_SAFE_INTEGER (effectively always pending until administered)
         currentStatus = 'pending';
     }
   }
@@ -63,56 +56,33 @@ const getUpdatedVaccineStatus = (vaccine: Vaccine, childDob: string): Vaccine =>
 
 export function VaccineList() {
   const [profile] = useLocalStorage<ChildProfile>('childProfile', MOCK_CHILD_PROFILE);
-  // storedVaccines holds data from localStorage or INITIAL_VACCINES. This is the source of truth for persistence.
   const [storedVaccines, setAndPersistVaccines] = useLocalStorage<Vaccine[]>('userVaccines', INITIAL_VACCINES);
 
-  // renderableVaccines is what's actually displayed. Initialized with static data for SSR and first client paint.
-  const [renderableVaccines, setRenderableVaccines] = useState<Vaccine[]>(INITIAL_VACCINES.map(v => ({...v, recommendedDate: undefined})));
+  // Initialize with a basic version of INITIAL_VACCINES for SSR and initial client render
+  const [renderableVaccines, setRenderableVaccines] = useState<Vaccine[]>(
+    () => INITIAL_VACCINES.map(v => ({ ...v, status: v.status, recommendedDate: undefined }))
+  );
   const [isClientMounted, setIsClientMounted] = useState(false);
 
   useEffect(() => {
-    // This effect runs once on the client after the component mounts.
     setIsClientMounted(true);
   }, []);
 
   useEffect(() => {
-    // This effect runs when the component has mounted on the client and when relevant data changes.
     if (isClientMounted) {
-      const dobToUse = profile.dob; // Use the current profile's DOB (from localStorage or MOCK)
+      const dobToUse = profile.dob; 
       
-      // Process the vaccines based on data from localStorage (storedVaccines).
-      // This uses getUpdatedVaccineStatus which relies on the client's current date.
       const processed = storedVaccines.map(v => {
-        const initialStaticData = INITIAL_VACCINES.find(iv => iv.id === v.id) || {};
-        // Merge with stored data (respecting user-set statuses like 'administered')
-        // and then update dynamic fields like status (pending/missed) and recommendedDate.
+        // Find corresponding initial static data (like description, ageDue)
+        const initialStaticData = INITIAL_VACCINES.find(iv => iv.id === v.id);
+        // Merge stored data (user-set status, administeredDate) with static data,
+        // then update dynamic fields (status based on age, recommendedDate).
         return getUpdatedVaccineStatus({ ...initialStaticData, ...v }, dobToUse);
       });
       setRenderableVaccines(processed);
-    } else {
-      // For server-side rendering or before client mount, prepare renderableVaccines
-      // with deterministic recommendedDate calculation if possible, but static status.
-      const dobToUseForSSR = profile.dob || MOCK_CHILD_PROFILE.dob;
-      const ssrProcessedVaccines = INITIAL_VACCINES.map(v => {
-        let recDate: string | undefined = undefined;
-        if (dobToUseForSSR) {
-            let dueMonths = 0;
-            if (v.ageDue.toLowerCase() === 'ao nascer') {
-                dueMonths = 0;
-            } else {
-                const match = v.ageDue.match(/(\d+)\s*mes(es)?/);
-                dueMonths = (match && match[1]) ? parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
-            }
-            if(isFinite(dueMonths)) {
-                const rDate = addMonths(new Date(dobToUseForSSR), dueMonths);
-                recDate = format(rDate, 'yyyy-MM-dd');
-            }
-        }
-        return { ...v, status: v.status, recommendedDate: recDate }; // Use status from INITIAL_VACCINES
-      });
-      setRenderableVaccines(ssrProcessedVaccines);
     }
-  // profile.dob and storedVaccines are dependencies to re-run processing if they change on the client.
+    // When not client mounted, renderableVaccines remains as initialized by useState.
+    // This ensures server and client initial render are based on the same simple data structure.
   }, [isClientMounted, profile.dob, storedVaccines]);
 
   const handleUpdateVaccineStatus = (vaccineId: string, newStatus: Vaccine['status'], date?: string) => {
@@ -123,18 +93,12 @@ export function VaccineList() {
         : v
       )
     );
-    // The useEffect listening to storedVaccines will trigger a re-processing and update renderableVaccines.
   };
   
   const pendingVaccines = renderableVaccines.filter(v => v.status === 'pending').sort((a,b) => parseISO(a.recommendedDate || '9999-12-31').getTime() - parseISO(b.recommendedDate || '9999-12-31').getTime());
   const administeredVaccines = renderableVaccines.filter(v => v.status === 'administered').sort((a,b) => parseISO(b.administeredDate || '0000-01-01').getTime() - parseISO(a.administeredDate || '0000-01-01').getTime());
   const missedVaccines = renderableVaccines.filter(v => v.status === 'missed').sort((a,b) => parseISO(a.recommendedDate || '9999-12-31').getTime() - parseISO(b.recommendedDate || '9999-12-31').getTime());
 
-  if (!isClientMounted && renderableVaccines.every(v => v.recommendedDate === undefined)) {
-    // Optional: Show a loading state or basic version while client is mounting and processing
-    // This helps if recommendedDate calculation for SSR is too complex or profile.dob isn't ready for SSR logic
-    // For this fix, we primarily rely on INITIAL_VACCINES structure for the very first paint.
-  }
 
   const handleGenerateReport = () => {
     alert("Simulando geração de relatório PDF das vacinas. Esta funcionalidade será implementada futuramente com a listagem das vacinas administradas.");
@@ -191,11 +155,14 @@ export function VaccineList() {
       )}
 
       {renderableVaccines.length === 0 && <p className="text-muted-foreground">Nenhuma vacina para exibir.</p>}
-       {(missedVaccines.length === 0 && pendingVaccines.length === 0 && administeredVaccines.length === 0 && renderableVaccines.length > 0) && (
+       {(missedVaccines.length === 0 && pendingVaccines.length === 0 && administeredVaccines.length === 0 && renderableVaccines.length > 0 && isClientMounted) && (
         <p className="text-muted-foreground text-center py-4">Todas as vacinas estão em dia ou foram administradas!</p>
+      )}
+       {/* Show a generic message or loading state if not client mounted and lists are empty, 
+           as full processing hasn't happened yet. This prevents showing "All up to date" prematurely. */}
+       {(missedVaccines.length === 0 && pendingVaccines.length === 0 && administeredVaccines.length === 0 && !isClientMounted) && (
+        <p className="text-muted-foreground text-center py-4">Carregando informações das vacinas...</p>
       )}
     </div>
   );
 }
-
-    
