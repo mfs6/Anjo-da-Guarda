@@ -46,7 +46,7 @@ export const NUTRITION_TIPS: NutritionTip[] = [
 
 export const MOCK_CHILD_PROFILE = {
   id: DEFAULT_CHILD_ID,
-  name: "Pequeno Anjo",
+  name: "Bernardo",
   dob: new Date(new Date().setFullYear(new Date().getFullYear() - 1)).toISOString().split('T')[0], // Approx 1 year old
   profilePictureUrl: "https://placehold.co/100x100.png"
 };
@@ -60,3 +60,4 @@ export const calculateAgeInMonths = (dobString: string): number => {
   months += today.getMonth();
   return months <= 0 ? 0 : months;
 };
+
