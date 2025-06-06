@@ -20,7 +20,7 @@ export function MedicalRecordManager() {
   };
 
   const handleExportPdf = () => {
-    alert("Funcionalidade de exportar prontuário como PDF a ser implementada. Este PDF incluiria todas as entradas listadas.");
+    alert("Funcionalidade de exportar prontuário como PDF a ser implementada. Este PDF incluiria todas as entradas listadas, com detalhes sobre recomendações médicas e remédios a serem administrados, conforme registrado.");
   };
 
   const sortedEntries = [...entries].sort((a, b) => parseISO(b.date).getTime() - parseISO(a.date).getTime());
@@ -64,3 +64,4 @@ export function MedicalRecordManager() {
     </div>
   );
 }
+
