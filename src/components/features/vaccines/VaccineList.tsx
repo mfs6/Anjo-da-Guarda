@@ -7,7 +7,8 @@ import { VaccineCard } from "./VaccineCard";
 import { INITIAL_VACCINES, MOCK_CHILD_PROFILE, calculateAgeInMonths } from "@/lib/constants";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Syringe } from "lucide-react";
+import { Syringe, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { addMonths, format, differenceInCalendarDays, parseISO } from 'date-fns';
 
 // Enhanced logic to update vaccine status based on age and due dates
@@ -135,6 +136,10 @@ export function VaccineList() {
     // For this fix, we primarily rely on INITIAL_VACCINES structure for the very first paint.
   }
 
+  const handleGenerateReport = () => {
+    alert("Simulando geração de relatório PDF das vacinas. Esta funcionalidade será implementada futuramente com a listagem das vacinas administradas.");
+  };
+
   return (
     <div className="space-y-8">
       <Alert className="bg-primary/10 border-primary/30">
@@ -144,6 +149,13 @@ export function VaccineList() {
           Acompanhe as vacinas importantes para a saúde do seu filho. Lembre-se de consultar o pediatra para o calendário exato.
         </AlertDescription>
       </Alert>
+
+      <div className="flex justify-end my-4">
+        <Button onClick={handleGenerateReport} className="bg-accent text-accent-foreground hover:bg-accent/90">
+          <FileText className="mr-2 h-5 w-5" />
+          Gerar Relatório PDF
+        </Button>
+      </div>
 
       {missedVaccines.length > 0 && (
         <div>
@@ -185,3 +197,5 @@ export function VaccineList() {
     </div>
   );
 }
+
+    
