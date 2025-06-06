@@ -1,3 +1,4 @@
+
 export interface ChildProfile {
   id: string;
   name: string;
@@ -41,6 +42,18 @@ export interface SymptomCheckerResult {
   suggestion: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
   shouldSeeDoctor: boolean;
+}
+
+export interface Appointment {
+  id: string;
+  childId: string;
+  professionalName: string;
+  specialty: string;
+  appointmentDate: string; // YYYY-MM-DD
+  appointmentTime: string; // HH:MM
+  status: 'scheduled' | 'completed' | 'cancelled' | 'missed';
+  location?: string;
+  notes?: string;
 }
 
 export type NavItem = {

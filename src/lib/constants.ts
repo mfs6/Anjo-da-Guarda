@@ -1,5 +1,5 @@
 
-import type { Vaccine, Milestone, NutritionTip, ChildProfile } from './types';
+import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment } from './types';
 import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users } from 'lucide-react';
 
 export const APP_NAME = "Anjo da Guarda";
@@ -10,6 +10,7 @@ export const NAV_ITEMS = [
   { title: "Vacinas", href: "/vaccines", icon: Syringe },
   { title: "Marcos", href: "/milestones", icon: Star },
   { title: "Nutrição", href: "/nutrition", icon: Apple },
+  { title: "Consultas", href: "/appointments", icon: Users },
   { title: "Sintomas", href: "/symptoms", icon: Stethoscope },
   { title: "Perfil", href: "/profile", icon: User },
 ];
@@ -22,7 +23,6 @@ export const INITIAL_VACCINES: Vaccine[] = [
   { id: 'polio_dose1', name: 'Poliomielite (VIP/VOP) - 1ª dose', description: 'Previne a paralisia infantil.', ageDue: '2 meses', status: 'pending' },
   { id: 'pneumo_dose1', name: 'Pneumocócica Conjugada - 1ª dose', description: 'Previne pneumonia, meningite e otite.', ageDue: '2 meses', status: 'pending' },
   { id: 'rotavirus_dose1', name: 'Rotavírus - 1ª dose', description: 'Previne diarreia grave por rotavírus.', ageDue: '2 meses', status: 'pending' },
-  // Add more vaccines as needed
 ];
 
 export const INITIAL_MILESTONES: Milestone[] = [
@@ -77,28 +77,85 @@ export const NUTRITION_TIPS: NutritionTip[] = [
 export const MOCK_CHILD_PROFILE: ChildProfile = {
   id: DEFAULT_CHILD_ID,
   name: "Luís Marinho",
-  dob: "2023-03-15", // Static DOB for consistency
+  dob: "2023-03-15", // YYYY-MM-DD
   profilePictureUrl: "https://placehold.co/100x100.png"
 };
 
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 7);
+const nextMonth = new Date();
+nextMonth.setMonth(nextMonth.getMonth() + 1);
+const lastWeek = new Date();
+lastWeek.setDate(lastWeek.getDate() - 7);
+const twoMonthsAgo = new Date();
+twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+
+const formatDate = (date: Date): string => {
+  return date.toISOString().split('T')[0];
+};
+
+export const INITIAL_APPOINTMENTS: Appointment[] = [
+  {
+    id: 'apt1',
+    childId: DEFAULT_CHILD_ID,
+    professionalName: 'Dr. Ana Silva',
+    specialty: 'Pediatra',
+    appointmentDate: formatDate(tomorrow),
+    appointmentTime: '10:00',
+    status: 'scheduled',
+    location: 'Clínica Infantil Bem-Estar, Sala 3',
+    notes: 'Consulta de rotina dos 18 meses.'
+  },
+  {
+    id: 'apt2',
+    childId: DEFAULT_CHILD_ID,
+    professionalName: 'Dra. Carla Mendes',
+    specialty: 'Dentista Pediátrico',
+    appointmentDate: formatDate(nextMonth),
+    appointmentTime: '14:30',
+    status: 'scheduled',
+    location: 'Sorriso Feliz Odontopediatria',
+    notes: 'Primeira consulta odontológica.'
+  },
+  {
+    id: 'apt3',
+    childId: DEFAULT_CHILD_ID,
+    professionalName: 'Dr. João Santos',
+    specialty: 'Oftalmologista',
+    appointmentDate: formatDate(lastWeek),
+    appointmentTime: '09:00',
+    status: 'completed',
+    location: 'Visão Kids Oftalmologia',
+    notes: 'Teste da visão. Tudo normal.'
+  },
+  {
+    id: 'apt4',
+    childId: DEFAULT_CHILD_ID,
+    professionalName: 'Dr. Pedro Lima',
+    specialty: 'Fisioterapeuta',
+    appointmentDate: formatDate(twoMonthsAgo),
+    appointmentTime: '16:00',
+    status: 'cancelled',
+    location: 'Clínica Reabilitar',
+    notes: 'Sessão cancelada devido a imprevisto.'
+  },
+];
+
+
 // Function to calculate age in months (simplified)
 export const calculateAgeInMonths = (dobString: string): number => {
-  if (!dobString) return 0; // Handle cases where dobString might be undefined or empty
+  if (!dobString) return 0;
   const dob = new Date(dobString);
-  if (isNaN(dob.getTime())) return 0; // Handle invalid date strings
+  if (isNaN(dob.getTime())) return 0;
 
   const today = new Date();
   let months = (today.getFullYear() - dob.getFullYear()) * 12;
   months -= dob.getMonth();
   months += today.getMonth();
   
-  // Adjust if the current day of the month is before the DOB day of the month
-  // This handles cases where the month difference is calculated but the full month hasn't passed yet.
-  // For example, DOB is 2023-03-15, today is 2024-03-10. This is 11 full months, not 12.
   if (today.getDate() < dob.getDate()) {
     months--;
   }
   
   return months <= 0 ? 0 : months;
 };
-
