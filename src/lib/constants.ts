@@ -77,7 +77,7 @@ export const NUTRITION_TIPS: NutritionTip[] = [
 
 export const MOCK_CHILD_PROFILE: ChildProfile = {
   id: DEFAULT_CHILD_ID,
-  name: "Luís Marinho",
+  name: "Rafael Sabino Joviliano de Paula",
   dob: "2023-03-15", // YYYY-MM-DD
   profilePictureUrl: "https://placehold.co/100x100.png"
 };
@@ -209,3 +209,4 @@ export const calculateAgeInMonths = (dobString: string): number => {
   
   return months <= 0 ? 0 : months;
 };
+
