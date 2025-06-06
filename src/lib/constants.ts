@@ -1,6 +1,6 @@
 
-import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment } from './types';
-import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users } from 'lucide-react';
+import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, MedicalRecordEntry } from './types';
+import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users, FileText } from 'lucide-react';
 
 export const APP_NAME = "Anjo da Guarda";
 export const DEFAULT_CHILD_ID = "defaultChild";
@@ -11,6 +11,7 @@ export const NAV_ITEMS = [
   { title: "Marcos", href: "/milestones", icon: Star },
   { title: "Nutrição", href: "/nutrition", icon: Apple },
   { title: "Consultas", href: "/appointments", icon: Users },
+  { title: "Prontuário", href: "/medical-record", icon: ShieldCheck },
   { title: "Sintomas", href: "/symptoms", icon: Stethoscope },
   { title: "Perfil", href: "/profile", icon: User },
 ];
@@ -81,14 +82,20 @@ export const MOCK_CHILD_PROFILE: ChildProfile = {
   profilePictureUrl: "https://placehold.co/100x100.png"
 };
 
-const tomorrow = new Date();
-tomorrow.setDate(tomorrow.getDate() + 7);
-const nextMonth = new Date();
-nextMonth.setMonth(nextMonth.getMonth() + 1);
-const lastWeek = new Date();
-lastWeek.setDate(lastWeek.getDate() - 7);
-const twoMonthsAgo = new Date();
-twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2);
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(today.getDate() + 7);
+const nextMonth = new Date(today);
+nextMonth.setMonth(today.getMonth() + 1);
+const lastWeek = new Date(today);
+lastWeek.setDate(today.getDate() - 7);
+const twoMonthsAgo = new Date(today);
+twoMonthsAgo.setMonth(today.getMonth() - 2);
+const threeDaysAgo = new Date(today);
+threeDaysAgo.setDate(today.getDate() - 3);
+const oneMonthAgo = new Date(today);
+oneMonthAgo.setMonth(today.getMonth() -1);
+
 
 const formatDate = (date: Date): string => {
   return date.toISOString().split('T')[0];
@@ -138,6 +145,49 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
     status: 'cancelled',
     location: 'Clínica Reabilitar',
     notes: 'Sessão cancelada devido a imprevisto.'
+  },
+];
+
+export const INITIAL_MEDICAL_RECORD_ENTRIES: MedicalRecordEntry[] = [
+  {
+    id: 'mr1',
+    childId: DEFAULT_CHILD_ID,
+    entryType: 'Consulta',
+    date: formatDate(lastWeek),
+    time: '09:00',
+    title: 'Consulta Oftalmológica',
+    professionalOrLocation: 'Dr. João Santos - Visão Kids Oftalmologia',
+    summary: 'Teste da visão realizado. Acuidade visual normal para a idade. Sem necessidade de correção no momento. Retorno em 1 ano.',
+    attachments: [{ name: 'ExameVisual.pdf', url: '#' }]
+  },
+  {
+    id: 'mr2',
+    childId: DEFAULT_CHILD_ID,
+    entryType: 'Emergência',
+    date: formatDate(threeDaysAgo),
+    time: '20:30',
+    title: 'Febre Alta e Vômito',
+    professionalOrLocation: 'PS Infantil Municipal',
+    summary: 'Criança chegou com febre de 39.5°C e dois episódios de vômito. Diagnosticado com virose gastrointestinal. Medicado com antitérmico e orientações para hidratação oral. Observar sinais de desidratação.',
+  },
+  {
+    id: 'mr3',
+    childId: DEFAULT_CHILD_ID,
+    entryType: 'Vacinação',
+    date: formatDate(oneMonthAgo),
+    title: 'Vacina Pentavalente - Reforço',
+    professionalOrLocation: 'Posto de Saúde Central',
+    summary: 'Administrada dose de reforço da vacina Pentavalente. Sem reações adversas imediatas.',
+  },
+   {
+    id: 'mr4',
+    childId: DEFAULT_CHILD_ID,
+    entryType: 'Consulta',
+    date: formatDate(twoMonthsAgo),
+    time: '15:00',
+    title: 'Consulta Pediátrica de Rotina',
+    professionalOrLocation: 'Dra. Ana Silva - Clínica Infantil Bem-Estar',
+    summary: 'Acompanhamento de desenvolvimento. Peso e altura adequados. Orientações sobre alimentação e sono. Próxima consulta em 3 meses.',
   },
 ];
 

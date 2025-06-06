@@ -56,6 +56,20 @@ export interface Appointment {
   notes?: string;
 }
 
+export type MedicalRecordEntryType = 'Consulta' | 'Emergência' | 'Exame' | 'Vacinação' | 'Observação';
+
+export interface MedicalRecordEntry {
+  id: string;
+  childId: string;
+  entryType: MedicalRecordEntryType;
+  date: string; // YYYY-MM-DD
+  time?: string; // HH:MM, optional
+  title: string; // e.g., "Consulta de Rotina", "Febre Alta - PS Infantil"
+  professionalOrLocation?: string; // e.g., "Dr. Ana Silva" or "PS Infantil ABC"
+  summary: string; // Detailed notes, diagnosis, treatment
+  attachments?: { name: string; url: string }[]; // Placeholder for file attachments
+}
+
 export type NavItem = {
   title: string;
   href: string;
