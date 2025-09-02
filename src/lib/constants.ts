@@ -12,7 +12,6 @@ export const NAV_ITEMS = [
   { title: "Nutrição", href: "/nutrition", icon: Apple },
   { title: "Consultas", href: "/appointments", icon: Users },
   { title: "Prontuário", href: "/medical-record", icon: ShieldCheck },
-  { title: "Sintomas", href: "/symptoms", icon: Stethoscope },
   { title: "Perfil", href: "/profile", icon: User },
 ];
 
@@ -209,4 +208,5 @@ export const calculateAgeInMonths = (dobString: string): number => {
   
   return months <= 0 ? 0 : months;
 };
+
 

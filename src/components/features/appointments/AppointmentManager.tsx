@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import type { Appointment, ChildProfile } from "@/lib/types";
+import type { Appointment, ChildProfile, SymptomCheckerResult } from "@/lib/types";
 import { INITIAL_APPOINTMENTS, MOCK_CHILD_PROFILE } from "@/lib/constants";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -11,11 +11,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentCard } from "./AppointmentCard";
 import { Users, PlusCircle } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
+import { AppointmentScheduler } from './AppointmentScheduler';
 
 export function AppointmentManager() {
   const [profile] = useLocalStorage<ChildProfile>('childProfile', MOCK_CHILD_PROFILE);
   const [appointments, setAppointments] = useLocalStorage<Appointment[]>('userAppointments', INITIAL_APPOINTMENTS);
   const [isClient, setIsClient] = useState(false);
+  const [isSchedulerOpen, setIsSchedulerOpen] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -27,12 +29,17 @@ export function AppointmentManager() {
         apt.id === appointmentId ? { ...apt, status: newStatus } : apt
       )
     );
-    // In a real app, you might want to add more logic here, e.g., if cancelled, clear date/time for rescheduling.
   };
-
-  const handleAddAppointment = () => {
-    // Placeholder for adding a new appointment - will likely open a modal/dialog
-    alert("Funcionalidade de adicionar nova consulta a ser implementada.");
+  
+  const handleAppointmentScheduled = (newAppointmentData: Omit<Appointment, 'id' | 'childId' | 'status'>) => {
+    const newAppointment: Appointment = {
+        ...newAppointmentData,
+        id: `apt_${Date.now()}`,
+        childId: profile.id,
+        status: 'scheduled',
+    };
+    setAppointments(prev => [newAppointment, ...prev]);
+    setIsSchedulerOpen(false); // Close the scheduler modal
   };
 
   const upcomingAppointments = appointments.filter(apt => {
@@ -60,15 +67,21 @@ export function AppointmentManager() {
         <Users className="h-5 w-5 text-primary" />
         <AlertTitle className="font-headline text-primary">Consultas Médicas de {profile.name}</AlertTitle>
         <AlertDescription>
-          Acompanhe as consultas agendadas e o histórico de visitas a profissionais de saúde.
+          Acompanhe as consultas agendadas e o histórico de visitas a profissionais de saúde. Para agendar, faça uma triagem de sintomas primeiro.
         </AlertDescription>
       </Alert>
 
       <div className="flex justify-end">
-        <Button onClick={handleAddAppointment} className="bg-accent text-accent-foreground hover:bg-accent/90">
-          <PlusCircle className="mr-2 h-5 w-5" />
-          Adicionar Nova Consulta
-        </Button>
+        <AppointmentScheduler
+          isOpen={isSchedulerOpen}
+          onOpenChange={setIsSchedulerOpen}
+          onAppointmentScheduled={handleAppointmentScheduled}
+        >
+            <Button onClick={() => setIsSchedulerOpen(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <PlusCircle className="mr-2 h-5 w-5" />
+                Adicionar Nova Consulta
+            </Button>
+        </AppointmentScheduler>
       </div>
 
       <Tabs defaultValue="upcoming" className="w-full">
