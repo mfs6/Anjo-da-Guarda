@@ -1,12 +1,13 @@
 
 import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, MedicalRecordEntry } from './types';
-import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users, FileText } from 'lucide-react';
+import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users, FileText, HeartPulse } from 'lucide-react';
 
 export const APP_NAME = "Anjo da Guarda";
 export const DEFAULT_CHILD_ID = "defaultChild";
 
 export const NAV_ITEMS = [
   { title: "Painel", href: "/dashboard", icon: Activity },
+  { title: "Sintomas", href: "/symptoms", icon: HeartPulse },
   { title: "Vacinas", href: "/vaccines", icon: Syringe },
   { title: "Marcos", href: "/milestones", icon: Star },
   { title: "Nutrição", href: "/nutrition", icon: Apple },
@@ -208,5 +209,6 @@ export const calculateAgeInMonths = (dobString: string): number => {
   
   return months <= 0 ? 0 : months;
 };
+
 
 
