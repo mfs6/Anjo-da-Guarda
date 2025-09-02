@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A symptom checker AI flow for pediatric assistance.
@@ -8,7 +9,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit/zod';
+import {z} from 'zod';
 import type {SymptomCheckerInput, SymptomCheckerResult} from '@/lib/types';
 
 // Define the Zod schema for the flow's input
