@@ -50,9 +50,18 @@ export function AppointmentScheduler({
       appointmentDate: '',
       appointmentTime: '',
       location: '',
-      notes: '',
+      notes: triageResult?.suggestion || '',
     },
   });
+  
+  useEffect(() => {
+    // If triageResult changes, update the notes field.
+    // This handles the case where the component is already mounted when the result arrives.
+    if(triageResult?.suggestion) {
+        form.setValue('notes', `Triagem: ${triageResult.suggestion}`);
+    }
+  }, [triageResult, form]);
+
 
   const onSubmit: SubmitHandler<AppointmentFormValues> = (data) => {
     onAppointmentScheduled(data);
@@ -63,7 +72,7 @@ export function AppointmentScheduler({
         <div>
         {triageResult && (
             <div className="mb-4">
-                <TriageResultAlert result={triageResult} />
+                <TriageResultAlert result={triageResult} isSchedulingView={true}/>
             </div>
         )}
         <Form {...form}>

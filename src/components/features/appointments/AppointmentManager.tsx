@@ -9,18 +9,19 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentCard } from "./AppointmentCard";
-import { Users, PlusCircle } from "lucide-react";
+import { Users, PlusCircle, ArrowRight } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
 import { AppointmentScheduler } from './AppointmentScheduler';
 import { SymptomChecker } from '../symptoms/SymptomChecker';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { TriageResultAlert } from './TriageResultAlert';
 
 export function AppointmentManager() {
   const [profile] = useLocalStorage<ChildProfile>('childProfile', MOCK_CHILD_PROFILE);
   const [appointments, setAppointments] = useLocalStorage<Appointment[]>('userAppointments', INITIAL_APPOINTMENTS);
   const [isClient, setIsClient] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [step, setStep] = useState<'symptoms' | 'schedule'>('symptoms');
+  const [step, setStep] = useState<'symptoms' | 'triageResult' | 'schedule'>('symptoms');
   const [symptomResult, setSymptomResult] = useState<SymptomCheckerResult | null>(null);
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export function AppointmentManager() {
   
   const handleSymptomCheckComplete = (result: SymptomCheckerResult) => {
     setSymptomResult(result);
-    setStep('schedule');
+    setStep('triageResult');
   }
 
   const handleCloseModal = () => {
@@ -112,10 +113,24 @@ export function AppointmentManager() {
                         <SymptomChecker onCheckComplete={handleSymptomCheckComplete} isModalVersion={true} />
                     </>
                 )}
+                {step === 'triageResult' && symptomResult && (
+                    <>
+                         <DialogHeader>
+                            <DialogTitle>Passo 2: Resultado da Triagem</DialogTitle>
+                        </DialogHeader>
+                        <div className="py-4">
+                           <TriageResultAlert result={symptomResult} />
+                        </div>
+                        <Button onClick={() => setStep('schedule')}>
+                            Prosseguir para Agendamento
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                    </>
+                )}
                 {step === 'schedule' && (
                     <>
                          <DialogHeader>
-                            <DialogTitle>Passo 2: Agendar Consulta</DialogTitle>
+                            <DialogTitle>Passo 3: Agendar Consulta</DialogTitle>
                         </DialogHeader>
                         <AppointmentScheduler 
                             onAppointmentScheduled={handleAppointmentScheduled} 
