@@ -10,13 +10,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Stethoscope, AlertTriangle, CheckCircle, Info, Loader2, HeartPulse, CalendarPlus } from 'lucide-react';
+import { Stethoscope, AlertTriangle, CheckCircle, Info, Loader2, HeartPulse } from 'lucide-react';
 import { symptomCheckerFlow } from '@/ai/flows/symptomCheckerFlow';
 import type { SymptomCheckerResult, ChildProfile } from '@/lib/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { MOCK_CHILD_PROFILE, calculateAgeInMonths } from '@/lib/constants';
 import { Label } from '@/components/ui/label';
-import Link from 'next/link';
 
 const schema = z.object({
   symptomsDescription: z.string().min(10, { message: "Por favor, descreva os sintomas com mais detalhes (mínimo 10 caracteres)." }),
@@ -25,7 +24,12 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export function SymptomChecker() {
+interface SymptomCheckerProps {
+  onCheckComplete?: (result: SymptomCheckerResult) => void;
+  isModalVersion?: boolean;
+}
+
+export function SymptomChecker({ onCheckComplete, isModalVersion = false }: SymptomCheckerProps) {
   const [profile] = useLocalStorage<ChildProfile>('childProfile', MOCK_CHILD_PROFILE);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +57,9 @@ export function SymptomChecker() {
       });
 
       setResult(aiResult);
+      if (onCheckComplete) {
+        onCheckComplete(aiResult);
+      }
     } catch (e) {
       console.error("Symptom checker error:", e);
       setError("Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.");
@@ -91,6 +98,75 @@ export function SymptomChecker() {
       }
   };
 
+  const MainContent = () => (
+    <>
+      <Card className="shadow-none border-0">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <CardContent className="space-y-4 !p-0">
+            <div>
+              <Label htmlFor="symptomsDescription" className="font-semibold">Descrição Principal dos Sintomas</Label>
+              <Textarea
+                id="symptomsDescription"
+                placeholder="Ex: Febre há 2 dias, tosse seca, moleza no corpo..."
+                {...register("symptomsDescription")}
+                className={`mt-1 ${errors.symptomsDescription ? 'border-destructive' : ''}`}
+              />
+              {errors.symptomsDescription && <p className="text-sm text-destructive mt-1">{errors.symptomsDescription.message}</p>}
+            </div>
+            <div>
+              <Label htmlFor="additionalSymptoms" className="font-semibold">Sintomas Adicionais (opcional, separados por vírgula)</Label>
+              <Input
+                id="additionalSymptoms"
+                placeholder="Ex: Perda de apetite, dor de cabeça..."
+                {...register("additionalSymptoms")}
+                className="mt-1"
+              />
+            </div>
+          </CardContent>
+          <CardFooter className="flex-col items-stretch space-y-4 !p-0 pt-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Erro</AlertTitle>
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Analisando...
+                </>
+              ) : "Verificar Sintomas"}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+
+      {result && !onCheckComplete && (
+        <Card className="shadow-lg animate-in fade-in-50">
+          <CardHeader>
+            <CardTitle>Resultado da Triagem</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Alert className={getResultAlertBgClass()}>
+              {getResultAlertIcon()}
+              <AlertTitle className="font-headline">Sugestão (Severidade: {result.severity})</AlertTitle>
+              <AlertDescription>
+                <p className="font-semibold">{result.suggestion}</p>
+                {result.shouldSeeDoctor && <p className="mt-2"><strong>Recomendação: Procure um médico.</strong></p>}
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      )}
+    </>
+  );
+
+  if (isModalVersion) {
+    return <MainContent />;
+  }
+
   return (
     <div className="space-y-8">
         <Alert className="bg-primary/10 border-primary/30">
@@ -110,78 +186,10 @@ export function SymptomChecker() {
                     Idade atual: {calculateAgeInMonths(profile.dob)} meses.
                 </CardDescription>
             </CardHeader>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <CardContent className="space-y-4">
-                    <div>
-                        <Label htmlFor="symptomsDescription" className="font-semibold">Descrição Principal dos Sintomas</Label>
-                        <Textarea
-                            id="symptomsDescription"
-                            placeholder="Ex: Febre há 2 dias, tosse seca, moleza no corpo..."
-                            {...register("symptomsDescription")}
-                            className={`mt-1 ${errors.symptomsDescription ? 'border-destructive' : ''}`}
-                        />
-                        {errors.symptomsDescription && <p className="text-sm text-destructive mt-1">{errors.symptomsDescription.message}</p>}
-                    </div>
-                     <div>
-                        <Label htmlFor="additionalSymptoms" className="font-semibold">Sintomas Adicionais (opcional, separados por vírgula)</Label>
-                        <Input
-                            id="additionalSymptoms"
-                            placeholder="Ex: Perda de apetite, dor de cabeça..."
-                            {...register("additionalSymptoms")}
-                            className="mt-1"
-                        />
-                    </div>
-                </CardContent>
-                <CardFooter className="flex-col items-stretch space-y-4">
-                     {error && (
-                        <Alert variant="destructive">
-                            <AlertTriangle className="h-4 w-4" />
-                            <AlertTitle>Erro</AlertTitle>
-                            <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                    )}
-                    <Button type="submit" disabled={isLoading} className="w-full">
-                        {isLoading ? (
-                            <>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Analisando...
-                            </>
-                        ) : "Verificar Sintomas"}
-                    </Button>
-                </CardFooter>
-            </form>
+            <CardContent>
+              <MainContent />
+            </CardContent>
         </Card>
-
-        {result && (
-            <Card className="shadow-lg animate-in fade-in-50">
-                <CardHeader>
-                    <CardTitle>Resultado da Triagem</CardTitle>
-                </CardHeader>
-                <CardContent>
-                     <Alert className={getResultAlertBgClass()}>
-                        {getResultAlertIcon()}
-                        <AlertTitle className="font-headline">Sugestão (Severidade: {result.severity})</AlertTitle>
-                        <AlertDescription>
-                            <p className="font-semibold">{result.suggestion}</p>
-                            {result.shouldSeeDoctor && <p className="mt-2"><strong>Recomendação: Procure um médico.</strong></p>}
-                        </AlertDescription>
-                    </Alert>
-                </CardContent>
-                <CardFooter className="flex-col items-stretch space-y-4">
-                     <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                        <Link href="/appointments">
-                            <CalendarPlus className="mr-2 h-5 w-5" />
-                            Agendar Consulta
-                        </Link>
-                    </Button>
-                    <p className="text-xs text-muted-foreground italic text-center">
-                        Esta é uma sugestão gerada por IA. Clique no botão acima para ir à tela de agendamento e marcar uma consulta. Em caso de emergência, procure atendimento médico imediatamente.
-                    </p>
-                </CardFooter>
-            </Card>
-        )}
     </div>
   );
 }
-
-    

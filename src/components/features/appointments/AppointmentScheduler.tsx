@@ -1,22 +1,13 @@
 
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
-  DialogClose,
-} from '@/components/ui/dialog';
 import {
   Form,
   FormControl,
@@ -34,23 +25,21 @@ const appointmentSchema = z.object({
   professionalName: z.string().min(3, { message: 'Nome do profissional é obrigatório.' }),
   specialty: z.string().min(3, { message: 'Especialidade é obrigatória.' }),
   appointmentDate: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), { message: 'Data inválida. Use o formato AAAA-MM-DD.' }),
-  appointmentTime: z.string().refine((time) => /^\d{2-(oito|8)}\d{2}$/.test(time), { message: 'Horário inválido. Use o formato HH:MM.' }),
+  appointmentTime: z.string().refine((time) => /^\d{2}:\d{2}$/.test(time), { message: 'Horário inválido. Use o formato HH:MM.' }),
   location: z.string().optional(),
   notes: z.string().optional(),
 });
 
 interface AppointmentSchedulerProps {
-  children: React.ReactNode;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
   onAppointmentScheduled: (data: AppointmentFormValues) => void;
+  onCancel: () => void;
+  initialNotes?: string;
 }
 
 export function AppointmentScheduler({
-  children,
-  isOpen,
-  onOpenChange,
   onAppointmentScheduled,
+  onCancel,
+  initialNotes = '',
 }: AppointmentSchedulerProps) {
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentSchema),
@@ -60,9 +49,21 @@ export function AppointmentScheduler({
       appointmentDate: '',
       appointmentTime: '',
       location: '',
-      notes: '',
+      notes: initialNotes,
     },
   });
+
+  useEffect(() => {
+    form.reset({
+      notes: initialNotes,
+      professionalName: '',
+      specialty: '',
+      appointmentDate: '',
+      appointmentTime: '',
+      location: '',
+    });
+  }, [initialNotes, form]);
+
 
   const onSubmit: SubmitHandler<AppointmentFormValues> = (data) => {
     onAppointmentScheduled(data);
@@ -70,15 +71,6 @@ export function AppointmentScheduler({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[480px]">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <CalendarPlus />
-            Agendar Nova Consulta
-          </DialogTitle>
-        </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
             <FormField
@@ -155,24 +147,20 @@ export function AppointmentScheduler({
                 <FormItem>
                   <FormLabel>Observações (Opcional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Motivo da consulta, sintomas, etc." {...field} />
+                    <Textarea placeholder="Motivo da consulta, sintomas, resultado da triagem, etc." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <DialogFooter>
-              <DialogClose asChild>
-                 <Button type="button" variant="outline">Cancelar</Button>
-              </DialogClose>
+            <div className="flex justify-end gap-2 pt-4">
+                 <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
               <Button type="submit">
                 <CalendarPlus className="mr-2 h-4 w-4" />
                 Agendar Consulta
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         </Form>
-      </DialogContent>
-    </Dialog>
   );
 }

@@ -208,5 +208,3 @@ export const calculateAgeInMonths = (dobString: string): number => {
   
   return months <= 0 ? 0 : months;
 };
-
-    

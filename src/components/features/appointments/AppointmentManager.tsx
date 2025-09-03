@@ -12,18 +12,21 @@ import { AppointmentCard } from "./AppointmentCard";
 import { Users, PlusCircle } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
 import { AppointmentScheduler } from './AppointmentScheduler';
-import Link from 'next/link';
+import { SymptomChecker } from '../symptoms/SymptomChecker';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 export function AppointmentManager() {
   const [profile] = useLocalStorage<ChildProfile>('childProfile', MOCK_CHILD_PROFILE);
   const [appointments, setAppointments] = useLocalStorage<Appointment[]>('userAppointments', INITIAL_APPOINTMENTS);
   const [isClient, setIsClient] = useState(false);
-  const [isSchedulerOpen, setIsSchedulerOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [step, setStep] = useState<'symptoms' | 'schedule'>('symptoms');
+  const [symptomResult, setSymptomResult] = useState<SymptomCheckerResult | null>(null);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
-  
+
   const handleUpdateAppointmentStatus = (appointmentId: string, newStatus: Appointment['status']) => {
     setAppointments(prevAppointments =>
       prevAppointments.map(apt =>
@@ -40,8 +43,22 @@ export function AppointmentManager() {
         status: 'scheduled',
     };
     setAppointments(prev => [newAppointment, ...prev]);
-    setIsSchedulerOpen(false); // Close the scheduler modal
+    handleCloseModal(); // Close and reset modal
   };
+  
+  const handleSymptomCheckComplete = (result: SymptomCheckerResult) => {
+    setSymptomResult(result);
+    setStep('schedule');
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    // Reset state after a short delay to allow closing animation
+    setTimeout(() => {
+      setStep('symptoms');
+      setSymptomResult(null);
+    }, 300);
+  }
 
   const upcomingAppointments = appointments.filter(apt => {
     if (apt.status !== 'scheduled') return false;
@@ -73,16 +90,42 @@ export function AppointmentManager() {
       </Alert>
 
       <div className="flex justify-end">
-        <AppointmentScheduler
-          isOpen={isSchedulerOpen}
-          onOpenChange={setIsSchedulerOpen}
-          onAppointmentScheduled={handleAppointmentScheduled}
-        >
-          <Button onClick={() => setIsSchedulerOpen(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <PlusCircle className="mr-2 h-5 w-5" />
-              Agendar Consulta
-          </Button>
-        </AppointmentScheduler>
+         <Dialog open={isModalOpen} onOpenChange={(open) => {
+            if (!open) {
+                handleCloseModal();
+            } else {
+                setIsModalOpen(true);
+            }
+         }}>
+             <DialogTrigger asChild>
+                <Button onClick={() => setIsModalOpen(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                    <PlusCircle className="mr-2 h-5 w-5" />
+                    Agendar Consulta
+                </Button>
+             </DialogTrigger>
+             <DialogContent className="sm:max-w-lg">
+                {step === 'symptoms' && (
+                    <>
+                        <DialogHeader>
+                            <DialogTitle>Passo 1: Triagem de Sintomas</DialogTitle>
+                        </DialogHeader>
+                        <SymptomChecker onCheckComplete={handleSymptomCheckComplete} isModalVersion={true} />
+                    </>
+                )}
+                {step === 'schedule' && (
+                    <>
+                         <DialogHeader>
+                            <DialogTitle>Passo 2: Agendar Consulta</DialogTitle>
+                        </DialogHeader>
+                        <AppointmentScheduler 
+                            onAppointmentScheduled={handleAppointmentScheduled} 
+                            onCancel={handleCloseModal}
+                            initialNotes={symptomResult?.suggestion ? `Resultado da triagem: ${symptomResult.suggestion}` : ''}
+                         />
+                    </>
+                )}
+             </DialogContent>
+         </Dialog>
       </div>
 
       <Tabs defaultValue="upcoming" className="w-full">
