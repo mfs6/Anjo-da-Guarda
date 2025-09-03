@@ -49,8 +49,7 @@ export function AppointmentCard({ appointment, onUpdateStatus }: AppointmentCard
   };
 
 
-  const formattedDate = format(parseISO(appointment.appointmentDate), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })
-    .replace(/:00$/, `:${appointment.appointmentTime.split(':')[1]}`); // Ensure correct time from string
+  const formattedDate = format(parseISO(`${appointment.appointmentDate}T${appointment.appointmentTime}`), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR });
 
 
   return (

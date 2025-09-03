@@ -25,7 +25,7 @@ const appointmentSchema = z.object({
   professionalName: z.string().min(3, { message: 'Nome do profissional é obrigatório.' }),
   specialty: z.string().min(3, { message: 'Especialidade é obrigatória.' }),
   appointmentDate: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), { message: 'Data inválida. Use o formato AAAA-MM-DD.' }),
-  appointmentTime: z.string().refine((time) => /^\d{2}:\d{2}$/.test(time), { message: 'Horário inválido. Use o formato HH:MM.' }),
+  appointmentTime: z.string().regex(/^\d{2}:\d{2}$/, { message: 'Horário inválido. Use o formato HH:MM.' }),
   location: z.string().optional(),
   notes: z.string().optional(),
 });
@@ -105,7 +105,7 @@ export function AppointmentScheduler({
                 name="appointmentTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Horário (24h)</FormLabel>
+                    <FormLabel>Horário</FormLabel>
                     <FormControl>
                       <Input type="time" {...field} />
                     </FormControl>
