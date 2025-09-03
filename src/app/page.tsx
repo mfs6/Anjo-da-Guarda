@@ -25,7 +25,7 @@ export default function WelcomePage() {
                 <Baby className="h-12 w-12 text-accent" />
             </div>
           <h2 className="text-2xl font-headline font-bold text-accent mb-4">Acesso do Paciente</h2>
-          <form className="space-y-4">
+          <form action="/dashboard" className="space-y-4">
             <div>
               <Label htmlFor="cpf" className="sr-only">CPF</Label>
               <Input 
@@ -39,11 +39,9 @@ export default function WelcomePage() {
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                <Link href="/dashboard" className="w-full sm:w-auto">
-                    <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                        <KeyRound className="mr-2 h-4 w-4" /> Acessar com CPF
-                    </Button>
-                </Link>
+                 <Button type="submit" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90">
+                    <KeyRound className="mr-2 h-4 w-4" /> Acessar com CPF
+                 </Button>
                 <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
                     <Undo2 className="mr-2 h-4 w-4" /> Voltar
                 </Button>
@@ -60,7 +58,7 @@ export default function WelcomePage() {
                 <Stethoscope className="h-12 w-12 text-primary" />
             </div>
           <h2 className="text-2xl font-headline font-bold text-primary mb-4">Acesso Médico</h2>
-          <form className="space-y-4">
+          <form action="/dashboard" className="space-y-4">
             <div>
               <Label htmlFor="crm" className="sr-only">CRM</Label>
               <Input 
@@ -74,15 +72,12 @@ export default function WelcomePage() {
               />
             </div>
              <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                <Link href="/dashboard" className="w-full sm:w-auto">
-                    <Button className="w-full">
-                        <KeyRound className="mr-2 h-4 w-4" /> Acessar com CRM
-                    </Button>
-                </Link>
+                <Button type="submit" className="w-full">
+                    <KeyRound className="mr-2 h-4 w-4" /> Acessar com CRM
+                </Button>
                 <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
                     <Undo2 className="mr-2 h-4 w-4" /> Voltar
                 </Button>
-                
             </div>
           </form>
         </div>
