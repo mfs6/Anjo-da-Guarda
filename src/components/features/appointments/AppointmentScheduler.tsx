@@ -16,8 +16,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { CalendarPlus } from 'lucide-react';
-import type { Appointment, SymptomCheckerResult } from '@/lib/types';
+import { CalendarPlus, ArrowLeft } from 'lucide-react';
+import type { Appointment } from '@/lib/types';
 
 type AppointmentFormValues = Omit<Appointment, 'id' | 'childId' | 'status'>;
 
@@ -33,7 +33,6 @@ const appointmentSchema = z.object({
 interface AppointmentSchedulerProps {
   onAppointmentScheduled: (data: AppointmentFormValues) => void;
   onCancel: () => void;
-  triageResult: SymptomCheckerResult | null; // This prop is kept for potential future use but won't be displayed.
 }
 
 export function AppointmentScheduler({
@@ -48,7 +47,7 @@ export function AppointmentScheduler({
       appointmentDate: '',
       appointmentTime: '',
       location: '',
-      notes: '', // Ensure notes field starts empty.
+      notes: '',
     },
   });
 
@@ -106,7 +105,7 @@ export function AppointmentScheduler({
                 name="appointmentTime"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Horário</FormLabel>
+                    <FormLabel>Horário (24h)</FormLabel>
                     <FormControl>
                       <Input type="time" {...field} />
                     </FormControl>
@@ -141,8 +140,11 @@ export function AppointmentScheduler({
                 </FormItem>
               )}
             />
-            <div className="flex justify-end gap-2 pt-4">
-                 <Button type="button" variant="outline" onClick={onCancel}>Cancelar</Button>
+            <div className="flex justify-between pt-4">
+                 <Button type="button" variant="outline" onClick={onCancel}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Voltar
+                 </Button>
               <Button type="submit">
                 <CalendarPlus className="mr-2 h-4 w-4" />
                 Agendar Consulta

@@ -18,7 +18,7 @@ import { MOCK_CHILD_PROFILE, calculateAgeInMonths } from '@/lib/constants';
 import { Label } from '@/components/ui/label';
 
 const schema = z.object({
-  symptomsDescription: z.string().min(10, { message: "Por favor, descreva os sintomas com mais detalhes (mínimo 10 caracteres)." }),
+  symptomsDescription: z.string().min(1, { message: "Por favor, descreva os sintomas." }),
   additionalSymptoms: z.string().optional(),
 });
 

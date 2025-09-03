@@ -9,7 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentCard } from "./AppointmentCard";
-import { Users, PlusCircle, ArrowRight } from "lucide-react";
+import { Users, PlusCircle, ArrowRight, ArrowLeft } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
 import { AppointmentScheduler } from './AppointmentScheduler';
 import { SymptomChecker } from '../symptoms/SymptomChecker';
@@ -121,10 +121,16 @@ export function AppointmentManager() {
                         <div className="py-4">
                            <TriageResultAlert result={symptomResult} />
                         </div>
-                        <Button onClick={() => setStep('schedule')}>
-                            Prosseguir para Agendamento
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                        </Button>
+                        <div className="flex justify-between">
+                            <Button variant="outline" onClick={() => setStep('symptoms')}>
+                                <ArrowLeft className="mr-2 h-4 w-4" />
+                                Voltar
+                            </Button>
+                            <Button onClick={() => setStep('schedule')}>
+                                Prosseguir para Agendamento
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                            </Button>
+                        </div>
                     </>
                 )}
                 {step === 'schedule' && (
@@ -134,8 +140,7 @@ export function AppointmentManager() {
                         </DialogHeader>
                         <AppointmentScheduler 
                             onAppointmentScheduled={handleAppointmentScheduled} 
-                            onCancel={handleCloseModal}
-                            triageResult={symptomResult}
+                            onCancel={() => setStep('triageResult')}
                          />
                     </>
                 )}
