@@ -17,7 +17,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { CalendarPlus } from 'lucide-react';
-import type { Appointment } from '@/lib/types';
+import type { Appointment, SymptomCheckerResult } from '@/lib/types';
+import { TriageResultAlert } from './TriageResultAlert';
 
 type AppointmentFormValues = Omit<Appointment, 'id' | 'childId' | 'status'>;
 
@@ -33,13 +34,13 @@ const appointmentSchema = z.object({
 interface AppointmentSchedulerProps {
   onAppointmentScheduled: (data: AppointmentFormValues) => void;
   onCancel: () => void;
-  initialNotes?: string;
+  triageResult: SymptomCheckerResult | null;
 }
 
 export function AppointmentScheduler({
   onAppointmentScheduled,
   onCancel,
-  initialNotes = '',
+  triageResult,
 }: AppointmentSchedulerProps) {
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentSchema),
@@ -49,21 +50,9 @@ export function AppointmentScheduler({
       appointmentDate: '',
       appointmentTime: '',
       location: '',
-      notes: initialNotes,
+      notes: '',
     },
   });
-
-  useEffect(() => {
-    form.reset({
-      notes: initialNotes,
-      professionalName: '',
-      specialty: '',
-      appointmentDate: '',
-      appointmentTime: '',
-      location: '',
-    });
-  }, [initialNotes, form]);
-
 
   const onSubmit: SubmitHandler<AppointmentFormValues> = (data) => {
     onAppointmentScheduled(data);
@@ -71,8 +60,14 @@ export function AppointmentScheduler({
   };
 
   return (
+        <div>
+        {triageResult && (
+            <div className="mb-4">
+                <TriageResultAlert result={triageResult} />
+            </div>
+        )}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="specialty"
@@ -147,7 +142,7 @@ export function AppointmentScheduler({
                 <FormItem>
                   <FormLabel>Observações (Opcional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Motivo da consulta, sintomas, resultado da triagem, etc." {...field} />
+                    <Textarea placeholder="Descreva o motivo da consulta aqui..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -162,5 +157,6 @@ export function AppointmentScheduler({
             </div>
           </form>
         </Form>
+        </div>
   );
 }

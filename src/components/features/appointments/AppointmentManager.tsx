@@ -120,6 +120,7 @@ export function AppointmentManager() {
                         <AppointmentScheduler 
                             onAppointmentScheduled={handleAppointmentScheduled} 
                             onCancel={handleCloseModal}
+                            triageResult={symptomResult}
                          />
                     </>
                 )}
