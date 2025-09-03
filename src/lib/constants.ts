@@ -6,13 +6,14 @@ export const APP_NAME = "Anjo da Guarda";
 export const DEFAULT_CHILD_ID = "defaultChild";
 
 export const NAV_ITEMS: NavItem[] = [
-  { title: "Painel", href: "/dashboard", icon: Activity, persona: 'all' },
+  { title: "Painel", href: "/dashboard", icon: Activity, persona: 'paciente' },
+  { title: "Sintomas", href: "/symptoms", icon: HeartPulse, persona: 'paciente' },
   { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'medico' },
   { title: "Marcos", href: "/milestones", icon: Star, persona: 'paciente' },
   { title: "Nutrição", href: "/nutrition", icon: Apple, persona: 'paciente' },
   { title: "Consultas", href: "/appointments", icon: Users, persona: 'paciente' },
   { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'medico' },
-  { title: "Perfil", href: "/profile", icon: User, persona: 'all' },
+  { title: "Perfil", href: "/profile", icon: User, persona: 'paciente' },
 ];
 
 export const INITIAL_VACCINES: Vaccine[] = [

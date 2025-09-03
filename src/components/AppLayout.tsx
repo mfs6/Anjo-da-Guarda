@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -24,10 +24,11 @@ import { LogOut } from "lucide-react";
 import { Card } from "./ui/card";
 import { useEffect, useState } from "react";
 
-type Persona = 'medico' | 'paciente' | 'all';
+type Persona = 'medico' | 'paciente';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const sidebarContext = useSidebar();
   const isMobile = sidebarContext.isMobile;
   const [persona, setPersona] = useState<Persona | null>(null);
@@ -36,9 +37,13 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedPersona = localStorage.getItem('userPersona') as Persona;
-      setPersona(storedPersona || 'paciente'); // Default to 'paciente' if not set
+      if (storedPersona) {
+        setPersona(storedPersona);
+      } else {
+        router.push('/');
+      }
     }
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (persona) {
@@ -57,6 +62,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
 
   const currentTitle = filteredNavItems.find(item => pathname.startsWith(item.href))?.title || APP_NAME;
+
+  if (!persona) {
+    // Optional: Render a loading state or nothing while redirecting
+    return null; 
+  }
 
   return (
     <>
@@ -104,12 +114,14 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               {currentTitle}
             </h1>
           </div>
-          <Link href="/profile">
-            <Avatar className="h-9 w-9 cursor-pointer">
-              <AvatarImage src="https://placehold.co/100x100.png" alt="User Avatar" data-ai-hint="child avatar" />
-              <AvatarFallback>AN</AvatarFallback>
-            </Avatar>
-          </Link>
+          {persona === 'paciente' && (
+            <Link href="/profile">
+              <Avatar className="h-9 w-9 cursor-pointer">
+                <AvatarImage src="https://placehold.co/100x100.png" alt="User Avatar" data-ai-hint="child avatar" />
+                <AvatarFallback>AN</AvatarFallback>
+              </Avatar>
+            </Link>
+          )}
            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild>
              <Link href="/" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
