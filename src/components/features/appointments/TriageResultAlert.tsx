@@ -7,10 +7,9 @@ import { AlertTriangle, CheckCircle, Info } from "lucide-react";
 
 interface TriageResultAlertProps {
     result: SymptomCheckerResult;
-    isSchedulingView?: boolean;
 }
 
-export function TriageResultAlert({ result, isSchedulingView = false }: TriageResultAlertProps) {
+export function TriageResultAlert({ result }: TriageResultAlertProps) {
     
     const getResultAlertIcon = () => {
         if (!result) return <Info className="h-4 w-4" />;
@@ -69,7 +68,6 @@ export function TriageResultAlert({ result, isSchedulingView = false }: TriageRe
               <AlertDescription className={getAlertTextColor()}>
                 <p className="font-semibold mt-2">{result.suggestion}</p>
                 {result.shouldSeeDoctor && <p className="mt-2"><strong>Recomendação: Procure um médico.</strong></p>}
-                {isSchedulingView && <p className="mt-2 text-xs">As observações abaixo foram pré-preenchidas com o resultado da triagem.</p>}
               </AlertDescription>
             </Alert>
          </div>

@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -18,7 +18,6 @@ import {
 } from '@/components/ui/form';
 import { CalendarPlus } from 'lucide-react';
 import type { Appointment, SymptomCheckerResult } from '@/lib/types';
-import { TriageResultAlert } from './TriageResultAlert';
 
 type AppointmentFormValues = Omit<Appointment, 'id' | 'childId' | 'status'>;
 
@@ -34,13 +33,12 @@ const appointmentSchema = z.object({
 interface AppointmentSchedulerProps {
   onAppointmentScheduled: (data: AppointmentFormValues) => void;
   onCancel: () => void;
-  triageResult: SymptomCheckerResult | null;
+  triageResult: SymptomCheckerResult | null; // This prop is kept for potential future use but won't be displayed.
 }
 
 export function AppointmentScheduler({
   onAppointmentScheduled,
   onCancel,
-  triageResult,
 }: AppointmentSchedulerProps) {
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentSchema),
@@ -50,18 +48,9 @@ export function AppointmentScheduler({
       appointmentDate: '',
       appointmentTime: '',
       location: '',
-      notes: triageResult?.suggestion || '',
+      notes: '', // Ensure notes field starts empty.
     },
   });
-  
-  useEffect(() => {
-    // If triageResult changes, update the notes field.
-    // This handles the case where the component is already mounted when the result arrives.
-    if(triageResult?.suggestion) {
-        form.setValue('notes', `Triagem: ${triageResult.suggestion}`);
-    }
-  }, [triageResult, form]);
-
 
   const onSubmit: SubmitHandler<AppointmentFormValues> = (data) => {
     onAppointmentScheduled(data);
@@ -70,11 +59,6 @@ export function AppointmentScheduler({
 
   return (
         <div>
-        {triageResult && (
-            <div className="mb-4">
-                <TriageResultAlert result={triageResult} isSchedulingView={true}/>
-            </div>
-        )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -151,7 +135,7 @@ export function AppointmentScheduler({
                 <FormItem>
                   <FormLabel>Observações (Opcional)</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="Descreva o motivo da consulta aqui..." {...field} />
+                    <Textarea placeholder="Adicione notas ou o motivo da consulta aqui..." {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
