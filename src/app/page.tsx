@@ -33,6 +33,8 @@ export default function WelcomePage() {
                 placeholder="Digite seu CPF (Apenas Números)" 
                 className="text-center"
                 maxLength={11}
+                minLength={11}
+                required
                 onChange={handleNumericInput}
               />
             </div>
@@ -66,6 +68,8 @@ export default function WelcomePage() {
                 placeholder="Digite seu CRM (Apenas Números)" 
                 className="text-center"
                 maxLength={5}
+                minLength={5}
+                required
                 onChange={handleNumericInput}
               />
             </div>
