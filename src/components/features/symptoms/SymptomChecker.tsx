@@ -71,94 +71,113 @@ export function SymptomChecker({ onCheckComplete, isModalVersion = false }: Symp
   const getResultAlertIcon = () => {
     if (!result) return <Info className="h-4 w-4" />;
     switch (result.severity) {
-        case 'critical':
-        case 'high':
+        case 'Crítica':
+        case 'Alta':
             return <AlertTriangle className="h-4 w-4 text-destructive-foreground" />;
-        case 'medium':
-            return <Info className="h-4 w-4 text-yellow-700 dark:text-yellow-300" />;
-        case 'low':
-            return <CheckCircle className="h-4 w-4 text-green-700 dark:text-green-300" />;
+        case 'Média':
+            return <Info className="h-4 w-4 text-yellow-800 dark:text-yellow-300" />;
+        case 'Baixa':
+            return <CheckCircle className="h-4 w-4 text-green-800 dark:text-green-300" />;
         default:
             return <Info className="h-4 w-4" />;
     }
   };
 
-  const getResultAlertBgClass = () => {
-      if (!result) return "bg-blue-500/10 border-blue-500/30";
+  const getResultAlertVariantClass = () => {
+      if (!result) return "bg-blue-100 border-blue-400 text-blue-800";
       switch (result.severity) {
-          case 'critical':
-          case 'high':
-              return "bg-destructive border-destructive/50 text-destructive-foreground";
-          case 'medium':
-              return "bg-yellow-500/10 border-yellow-500/30";
-          case 'low':
-              return "bg-green-500/10 border-green-500/30";
+          case 'Crítica':
+          case 'Alta':
+              return "bg-red-100 border-red-400 text-red-800 dark:bg-red-900/50 dark:border-red-700 dark:text-red-300";
+          case 'Média':
+              return "bg-yellow-100 border-yellow-400 text-yellow-800 dark:bg-yellow-900/50 dark:border-yellow-700 dark:text-yellow-300";
+          case 'Baixa':
+              return "bg-green-100 border-green-400 text-green-800 dark:bg-green-900/50 dark:border-green-700 dark:text-green-300";
           default:
-              return "bg-blue-500/10 border-blue-500/30";
+              return "bg-blue-100 border-blue-400 text-blue-800";
       }
   };
 
   const MainContent = () => (
     <>
       <Card className="shadow-none border-0">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <CardContent className="space-y-4 !p-0">
-            <div>
-              <Label htmlFor="symptomsDescription" className="font-semibold">Descrição Principal dos Sintomas</Label>
-              <Textarea
-                id="symptomsDescription"
-                placeholder="Ex: Febre há 2 dias, tosse seca, moleza no corpo..."
-                {...register("symptomsDescription")}
-                className={`mt-1 ${errors.symptomsDescription ? 'border-destructive' : ''}`}
-              />
-              {errors.symptomsDescription && <p className="text-sm text-destructive mt-1">{errors.symptomsDescription.message}</p>}
-            </div>
-            <div>
-              <Label htmlFor="additionalSymptoms" className="font-semibold">Sintomas Adicionais (opcional, separados por vírgula)</Label>
-              <Input
-                id="additionalSymptoms"
-                placeholder="Ex: Perda de apetite, dor de cabeça..."
-                {...register("additionalSymptoms")}
-                className="mt-1"
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex-col items-stretch space-y-4 !p-0 pt-4">
-            {error && (
-              <Alert variant="destructive">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertTitle>Erro</AlertTitle>
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-            <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analisando...
-                </>
-              ) : "Verificar Sintomas"}
-            </Button>
-          </CardFooter>
-        </form>
+        {!result && (
+            <form onSubmit={handleSubmit(onSubmit)}>
+            <CardContent className="space-y-4 !p-0">
+                <div>
+                <Label htmlFor="symptomsDescription" className="font-semibold">Descrição Principal dos Sintomas</Label>
+                <Textarea
+                    id="symptomsDescription"
+                    placeholder="Ex: Febre há 2 dias, tosse seca, moleza no corpo..."
+                    {...register("symptomsDescription")}
+                    className={`mt-1 ${errors.symptomsDescription ? 'border-destructive' : ''}`}
+                />
+                {errors.symptomsDescription && <p className="text-sm text-destructive mt-1">{errors.symptomsDescription.message}</p>}
+                </div>
+                <div>
+                <Label htmlFor="additionalSymptoms" className="font-semibold">Sintomas Adicionais (opcional, separados por vírgula)</Label>
+                <Input
+                    id="additionalSymptoms"
+                    placeholder="Ex: Perda de apetite, dor de cabeça..."
+                    {...register("additionalSymptoms")}
+                    className="mt-1"
+                />
+                </div>
+            </CardContent>
+            <CardFooter className="flex-col items-stretch space-y-4 !p-0 pt-4">
+                {error && (
+                <Alert variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Erro</AlertTitle>
+                    <AlertDescription>{error}</AlertDescription>
+                </Alert>
+                )}
+                <Button type="submit" disabled={isLoading} className="w-full">
+                {isLoading ? (
+                    <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Analisando...
+                    </>
+                ) : "Verificar Sintomas"}
+                </Button>
+            </CardFooter>
+            </form>
+        )}
       </Card>
 
       {result && !onCheckComplete && (
-        <Card className="shadow-lg animate-in fade-in-50">
+        <Card className="shadow-lg animate-in fade-in-50 mt-6">
           <CardHeader>
             <CardTitle>Resultado da Triagem</CardTitle>
           </CardHeader>
           <CardContent>
-            <Alert className={getResultAlertBgClass()}>
+            <Alert className={getResultAlertVariantClass()}>
               {getResultAlertIcon()}
-              <AlertTitle className="font-headline">Sugestão (Severidade: {result.severity})</AlertTitle>
+              <AlertTitle className="font-headline font-bold">
+                Gravidade: {result.severity}
+              </AlertTitle>
               <AlertDescription>
-                <p className="font-semibold">{result.suggestion}</p>
+                <p className="font-semibold mt-2">{result.suggestion}</p>
                 {result.shouldSeeDoctor && <p className="mt-2"><strong>Recomendação: Procure um médico.</strong></p>}
               </AlertDescription>
             </Alert>
           </CardContent>
         </Card>
+      )}
+
+      {result && onCheckComplete && (
+         <div className="space-y-4 pt-4 animate-in fade-in-50">
+             <Alert className={getResultAlertVariantClass()}>
+              {getResultAlertIcon()}
+              <AlertTitle className="font-headline font-bold">
+                Gravidade: {result.severity}
+              </AlertTitle>
+              <AlertDescription>
+                <p className="font-semibold mt-2">{result.suggestion}</p>
+                {result.shouldSeeDoctor && <p className="mt-2"><strong>Recomendação: Procure um médico.</strong></p>}
+              </AlertDescription>
+            </Alert>
+         </div>
       )}
     </>
   );

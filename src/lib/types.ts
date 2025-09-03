@@ -40,7 +40,7 @@ export interface SymptomCheckerInput {
 
 export interface SymptomCheckerResult {
   suggestion: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: 'Baixa' | 'Média' | 'Alta' | 'Crítica';
   shouldSeeDoctor: boolean;
 }
 

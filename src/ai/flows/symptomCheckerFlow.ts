@@ -26,9 +26,9 @@ const SymptomCheckerOutputSchema = z.object({
       'A concise, helpful suggestion in Portuguese for the parents based on the symptoms. This should be empathetic and clear.'
     ),
   severity: z
-    .enum(['low', 'medium', 'high', 'critical'])
+    .enum(['Baixa', 'Média', 'Alta', 'Crítica'])
     .describe(
-      'An assessment of the severity of the symptoms. Use "critical" for emergencies like difficulty breathing.'
+      'An assessment of the severity of the symptoms. Use "Crítica" for emergencies like difficulty breathing.'
     ),
   shouldSeeDoctor: z
     .boolean()
@@ -71,9 +71,10 @@ const symptomCheckerPrompt = ai.definePrompt({
     {{/each}}
 
     Com base nesses dados, forneça uma avaliação concisa.
-    - Se os sintomas incluirem "dificuldade para respirar", "convulsão", ou "não reage", a severidade DEVE ser 'critical' e shouldSeeDoctor DEVE ser true.
-    - Se houver febre alta (acima de 38.5°C) por mais de 2 dias, a severidade deve ser 'high'.
-    - Sintomas de resfriado comum (tosse, coriza) sem febre devem ter severidade 'low'.
+    - Se os sintomas incluirem "dificuldade para respirar", "convulsão", ou "não reage", a severidade DEVE ser 'Crítica' e shouldSeeDoctor DEVE ser true.
+    - Se houver febre alta (acima de 38.5°C) por mais de 2 dias, a severidade deve ser 'Alta'.
+    - Febre moderada ou sintomas persistentes devem ter severidade 'Média'.
+    - Sintomas de resfriado comum (tosse, coriza) sem febre devem ter severidade 'Baixa'.
 
     Gere a resposta no formato JSON especificado.
   `,
