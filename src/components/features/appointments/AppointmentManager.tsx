@@ -120,7 +120,6 @@ export function AppointmentManager() {
                         <AppointmentScheduler 
                             onAppointmentScheduled={handleAppointmentScheduled} 
                             onCancel={handleCloseModal}
-                            initialNotes={symptomResult?.suggestion ? `Resultado da triagem: ${symptomResult.suggestion}` : ''}
                          />
                     </>
                 )}
