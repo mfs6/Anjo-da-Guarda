@@ -7,7 +7,7 @@ export const DEFAULT_CHILD_ID = "defaultChild";
 
 export const NAV_ITEMS: NavItem[] = [
   { title: "Painel", href: "/dashboard", icon: Activity, persona: 'paciente' },
-  { title: "Sintomas", href: "/symptoms", icon: HeartPulse, persona: 'paciente' },
+  //{ title: "Sintomas", href: "/symptoms", icon: HeartPulse, persona: 'paciente' },
   { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'medico' },
   { title: "Marcos", href: "/milestones", icon: Star, persona: 'paciente' },
   { title: "Nutrição", href: "/nutrition", icon: Apple, persona: 'paciente' },

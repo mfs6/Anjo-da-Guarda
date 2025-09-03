@@ -117,7 +117,7 @@ export default function WelcomePage() {
             </div>
             <CardTitle className="font-headline text-2xl text-accent">Sou Paciente</CardTitle>
             <CardDescription>
-              Acompanhe vacinas, marcos, consultas e a saúde do seu filho.
+              Acompanhe o calendário vacinal, marcos, nutrição e consultas do seu filho.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-grow flex items-end justify-center">
@@ -136,7 +136,7 @@ export default function WelcomePage() {
             </div>
             <CardTitle className="font-headline text-2xl text-primary">Sou Médico</CardTitle>
             <CardDescription>
-              Visualize o prontuário de seus pacientes e adicione novas entradas.
+              Visualize o prontuário completo de seus pacientes e adicione novas entradas.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex-grow flex items-end justify-center">
