@@ -12,6 +12,7 @@ import { AppointmentCard } from "./AppointmentCard";
 import { Users, PlusCircle } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
 import { AppointmentScheduler } from './AppointmentScheduler';
+import Link from 'next/link';
 
 export function AppointmentManager() {
   const [profile] = useLocalStorage<ChildProfile>('childProfile', MOCK_CHILD_PROFILE);
@@ -67,7 +68,7 @@ export function AppointmentManager() {
         <Users className="h-5 w-5 text-primary" />
         <AlertTitle className="font-headline text-primary">Consultas Médicas de {profile.name}</AlertTitle>
         <AlertDescription>
-          Acompanhe as consultas agendadas e o histórico de visitas a profissionais de saúde. Para agendar, faça uma triagem de sintomas primeiro.
+          Acompanhe as consultas agendadas e o histórico de visitas. Para agendar, faça uma triagem de sintomas primeiro.
         </AlertDescription>
       </Alert>
 
@@ -77,10 +78,10 @@ export function AppointmentManager() {
           onOpenChange={setIsSchedulerOpen}
           onAppointmentScheduled={handleAppointmentScheduled}
         >
-            <Button onClick={() => setIsSchedulerOpen(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <PlusCircle className="mr-2 h-5 w-5" />
-                Adicionar Nova Consulta
-            </Button>
+          <Button onClick={() => setIsSchedulerOpen(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
+              <PlusCircle className="mr-2 h-5 w-5" />
+              Agendar Consulta
+          </Button>
         </AppointmentScheduler>
       </div>
 
@@ -115,3 +116,4 @@ export function AppointmentManager() {
     </div>
   );
 }
+    

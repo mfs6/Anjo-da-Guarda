@@ -10,12 +10,13 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Stethoscope, AlertTriangle, CheckCircle, Info, Loader2, HeartPulse } from 'lucide-react';
+import { Stethoscope, AlertTriangle, CheckCircle, Info, Loader2, HeartPulse, CalendarPlus } from 'lucide-react';
 import { symptomCheckerFlow } from '@/ai/flows/symptomCheckerFlow';
 import type { SymptomCheckerResult, ChildProfile } from '@/lib/types';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { MOCK_CHILD_PROFILE, calculateAgeInMonths } from '@/lib/constants';
 import { Label } from '@/components/ui/label';
+import Link from 'next/link';
 
 const schema = z.object({
   symptomsDescription: z.string().min(10, { message: "Por favor, descreva os sintomas com mais detalhes (mínimo 10 caracteres)." }),
@@ -166,9 +167,15 @@ export function SymptomChecker() {
                         </AlertDescription>
                     </Alert>
                 </CardContent>
-                <CardFooter>
-                    <p className="text-xs text-muted-foreground italic">
-                        Esta é uma sugestão gerada por IA com base nas informações fornecidas e não substitui de forma alguma o diagnóstico e a orientação de um profissional de saúde qualificado. Em caso de emergência, procure atendimento médico imediatamente.
+                <CardFooter className="flex-col items-stretch space-y-4">
+                     <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                        <Link href="/appointments">
+                            <CalendarPlus className="mr-2 h-5 w-5" />
+                            Agendar Consulta
+                        </Link>
+                    </Button>
+                    <p className="text-xs text-muted-foreground italic text-center">
+                        Esta é uma sugestão gerada por IA. Clique no botão acima para ir à tela de agendamento e marcar uma consulta. Em caso de emergência, procure atendimento médico imediatamente.
                     </p>
                 </CardFooter>
             </Card>
@@ -176,3 +183,5 @@ export function SymptomChecker() {
     </div>
   );
 }
+
+    
