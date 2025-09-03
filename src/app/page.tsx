@@ -13,6 +13,10 @@ import { Label } from '@/components/ui/label';
 export default function WelcomePage() {
   const [selectedPersona, setSelectedPersona] = useState<'paciente' | 'medico' | null>(null);
 
+  const handleNumericInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+  };
+
   const renderContent = () => {
     if (selectedPersona === 'paciente') {
       return (
@@ -24,17 +28,23 @@ export default function WelcomePage() {
           <form className="space-y-4">
             <div>
               <Label htmlFor="cpf" className="sr-only">CPF</Label>
-              <Input id="cpf" placeholder="Digite seu CPF" className="text-center" />
+              <Input 
+                id="cpf" 
+                placeholder="Digite seu CPF (Apenas Números)" 
+                className="text-center"
+                maxLength={11}
+                onChange={handleNumericInput}
+              />
             </div>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
-                    <Undo2 className="mr-2 h-4 w-4" /> Voltar
-                </Button>
                 <Link href="/dashboard" className="w-full sm:w-auto">
                     <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
                         <KeyRound className="mr-2 h-4 w-4" /> Acessar com CPF
                     </Button>
                 </Link>
+                <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
+                    <Undo2 className="mr-2 h-4 w-4" /> Voltar
+                </Button>
             </div>
           </form>
         </div>
@@ -51,17 +61,24 @@ export default function WelcomePage() {
           <form className="space-y-4">
             <div>
               <Label htmlFor="crm" className="sr-only">CRM</Label>
-              <Input id="crm" placeholder="Digite seu CRM" className="text-center" />
+              <Input 
+                id="crm" 
+                placeholder="Digite seu CRM (Apenas Números)" 
+                className="text-center"
+                maxLength={5}
+                onChange={handleNumericInput}
+              />
             </div>
              <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
-                    <Undo2 className="mr-2 h-4 w-4" /> Voltar
-                </Button>
                 <Link href="/dashboard" className="w-full sm:w-auto">
                     <Button className="w-full">
                         <KeyRound className="mr-2 h-4 w-4" /> Acessar com CRM
                     </Button>
                 </Link>
+                <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
+                    <Undo2 className="mr-2 h-4 w-4" /> Voltar
+                </Button>
+                
             </div>
           </form>
         </div>
