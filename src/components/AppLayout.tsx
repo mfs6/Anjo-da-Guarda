@@ -22,11 +22,41 @@ import type { NavItem } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut } from "lucide-react";
 import { Card } from "./ui/card";
+import { useEffect, useState } from "react";
+
+type Persona = 'medico' | 'paciente' | 'all';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const sidebarContext = useSidebar();
   const isMobile = sidebarContext.isMobile;
+  const [persona, setPersona] = useState<Persona | null>(null);
+  const [filteredNavItems, setFilteredNavItems] = useState<NavItem[]>([]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedPersona = localStorage.getItem('userPersona') as Persona;
+      setPersona(storedPersona || 'paciente'); // Default to 'paciente' if not set
+    }
+  }, []);
+
+  useEffect(() => {
+    if (persona) {
+      const items = NAV_ITEMS.filter(item => 
+        item.persona === 'all' || item.persona === persona
+      );
+      setFilteredNavItems(items);
+    }
+  }, [persona]);
+  
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('userPersona');
+    }
+  };
+
+
+  const currentTitle = filteredNavItems.find(item => pathname.startsWith(item.href))?.title || APP_NAME;
 
   return (
     <>
@@ -40,7 +70,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <SidebarContent className="p-0">
           <ScrollArea className="h-full">
             <SidebarMenu className="p-2">
-              {NAV_ITEMS.map((item: NavItem) => (
+              {filteredNavItems.map((item: NavItem) => (
                 <SidebarMenuItem key={item.href}>
                   <Link href={item.href} passHref legacyBehavior>
                     <SidebarMenuButton
@@ -71,7 +101,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           )}
           <div className="flex-1">
             <h1 className="text-xl font-semibold font-headline">
-              {NAV_ITEMS.find(item => pathname.startsWith(item.href))?.title || APP_NAME}
+              {currentTitle}
             </h1>
           </div>
           <Link href="/profile">
@@ -81,7 +111,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             </Avatar>
           </Link>
            <Button variant="ghost" size="icon" className="text-muted-foreground" asChild>
-             <Link href="/">
+             <Link href="/" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
              </Link>
            </Button>

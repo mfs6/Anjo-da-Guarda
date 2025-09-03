@@ -1,18 +1,18 @@
 
-import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, MedicalRecordEntry } from './types';
+import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, MedicalRecordEntry, NavItem } from './types';
 import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users, FileText, HeartPulse } from 'lucide-react';
 
 export const APP_NAME = "Anjo da Guarda";
 export const DEFAULT_CHILD_ID = "defaultChild";
 
-export const NAV_ITEMS = [
-  { title: "Painel", href: "/dashboard", icon: Activity },
-  { title: "Vacinas", href: "/vaccines", icon: Syringe },
-  { title: "Marcos", href: "/milestones", icon: Star },
-  { title: "Nutrição", href: "/nutrition", icon: Apple },
-  { title: "Consultas", href: "/appointments", icon: Users },
-  { title: "Prontuário", href: "/medical-record", icon: ShieldCheck },
-  { title: "Perfil", href: "/profile", icon: User },
+export const NAV_ITEMS: NavItem[] = [
+  { title: "Painel", href: "/dashboard", icon: Activity, persona: 'all' },
+  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'medico' },
+  { title: "Marcos", href: "/milestones", icon: Star, persona: 'paciente' },
+  { title: "Nutrição", href: "/nutrition", icon: Apple, persona: 'paciente' },
+  { title: "Consultas", href: "/appointments", icon: Users, persona: 'paciente' },
+  { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'medico' },
+  { title: "Perfil", href: "/profile", icon: User, persona: 'all' },
 ];
 
 export const INITIAL_VACCINES: Vaccine[] = [

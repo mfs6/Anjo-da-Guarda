@@ -9,14 +9,32 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useRouter } from 'next/navigation';
 
 export default function WelcomePage() {
   const [selectedPersona, setSelectedPersona] = useState<'paciente' | 'medico' | null>(null);
+  const [cpf, setCpf] = useState("");
+  const [crm, setCrm] = useState("");
+  const router = useRouter();
 
-  const handleNumericInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+  const handlePersonaSelect = (persona: 'paciente' | 'medico') => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('userPersona', persona);
+    }
+    setSelectedPersona(persona);
   };
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push('/dashboard');
+  };
+
+  const handleNumericInput = (e: React.ChangeEvent<HTMLInputElement>, setter: (v: string) => void) => {
+    const numericValue = e.target.value.replace(/[^0-9]/g, ''); 
+    setter(numericValue);
+  };
+  
   const renderContent = () => {
     if (selectedPersona === 'paciente') {
       return (
@@ -25,21 +43,25 @@ export default function WelcomePage() {
                 <Baby className="h-12 w-12 text-accent" />
             </div>
           <h2 className="text-2xl font-headline font-bold text-accent mb-4">Acesso do Paciente</h2>
-          <form action="/dashboard" className="space-y-4">
+          <form onSubmit={handleFormSubmit} className="space-y-4">
             <div>
               <Label htmlFor="cpf" className="sr-only">CPF</Label>
               <Input 
                 id="cpf" 
                 placeholder="Digite seu CPF (Apenas Números)" 
                 className="text-center"
-                maxLength={11}
                 minLength={11}
+                maxLength={11}
                 required
-                onChange={handleNumericInput}
+                value={cpf}
+                onChange={(e) => handleNumericInput(e, setCpf)}
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                 <Button type="submit" className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90">
+                 <Button type="submit"
+                  className="w-full sm:w-auto bg-accent text-accent-foreground hover:bg-accent/90"
+                  disabled={cpf.length !== 11}
+                  >
                     <KeyRound className="mr-2 h-4 w-4" /> Acessar com CPF
                  </Button>
                 <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
@@ -58,21 +80,22 @@ export default function WelcomePage() {
                 <Stethoscope className="h-12 w-12 text-primary" />
             </div>
           <h2 className="text-2xl font-headline font-bold text-primary mb-4">Acesso Médico</h2>
-          <form action="/dashboard" className="space-y-4">
+          <form onSubmit={handleFormSubmit} className="space-y-4">
             <div>
               <Label htmlFor="crm" className="sr-only">CRM</Label>
               <Input 
                 id="crm" 
                 placeholder="Digite seu CRM (Apenas Números)" 
                 className="text-center"
-                maxLength={5}
                 minLength={5}
+                maxLength={5}
                 required
-                onChange={handleNumericInput}
+                value={crm}
+                onChange={(e) => handleNumericInput(e, setCrm)}
               />
             </div>
              <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={crm.length !== 5}>
                     <KeyRound className="mr-2 h-4 w-4" /> Acessar com CRM
                 </Button>
                 <Button type="button" variant="outline" onClick={() => setSelectedPersona(null)}>
@@ -87,7 +110,7 @@ export default function WelcomePage() {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl w-full">
         {/* Persona: Paciente */}
-        <Card className="text-center hover:shadow-lg hover:border-accent transition-all duration-300 cursor-pointer flex flex-col h-full" onClick={() => setSelectedPersona('paciente')}>
+        <Card className="text-center hover:shadow-lg hover:border-accent transition-all duration-300 cursor-pointer flex flex-col h-full" onClick={() => handlePersonaSelect('paciente')}>
           <CardHeader className="items-center">
             <div className="p-4 bg-accent/20 rounded-full mb-4">
               <Baby className="h-12 w-12 text-accent" />
@@ -106,7 +129,7 @@ export default function WelcomePage() {
         </Card>
 
         {/* Persona: Médico */}
-        <Card className="text-center hover:shadow-lg hover:border-primary transition-all duration-300 cursor-pointer flex flex-col h-full" onClick={() => setSelectedPersona('medico')}>
+        <Card className="text-center hover:shadow-lg hover:border-primary transition-all duration-300 cursor-pointer flex flex-col h-full" onClick={() => handlePersonaSelect('medico')}>
           <CardHeader className="items-center">
             <div className="p-4 bg-primary/20 rounded-full mb-4">
               <Stethoscope className="h-12 w-12 text-primary" />
