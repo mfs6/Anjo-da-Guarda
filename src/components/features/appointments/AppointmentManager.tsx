@@ -9,12 +9,14 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentCard } from "./AppointmentCard";
-import { Users, PlusCircle, ArrowRight, ArrowLeft } from "lucide-react";
+import { Users, PlusCircle, ArrowRight, ArrowLeft, CalendarDays } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
 import { AppointmentScheduler } from './AppointmentScheduler';
 import { SymptomChecker } from '../symptoms/SymptomChecker';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { TriageResultAlert } from './TriageResultAlert';
+
+type Persona = 'medico' | 'paciente';
 
 export function AppointmentManager() {
   const [profile] = useLocalStorage<ChildProfile>('childProfile', MOCK_CHILD_PROFILE);
@@ -23,9 +25,15 @@ export function AppointmentManager() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState<'symptoms' | 'triageResult' | 'schedule'>('symptoms');
   const [symptomResult, setSymptomResult] = useState<SymptomCheckerResult | null>(null);
+  const [persona, setPersona] = useState<Persona | null>(null);
+
 
   useEffect(() => {
     setIsClient(true);
+    if (typeof window !== 'undefined') {
+      const storedPersona = localStorage.getItem('userPersona') as Persona;
+      setPersona(storedPersona);
+    }
   }, []);
 
   const handleUpdateAppointmentStatus = (appointmentId: string, newStatus: Appointment['status']) => {
@@ -80,8 +88,8 @@ export function AppointmentManager() {
   }).sort((a, b) => parseISO(`${b.appointmentDate}T${b.appointmentTime}:00`).getTime() - parseISO(`${a.appointmentDate}T${a.appointmentTime}:00`).getTime());
 
 
-  return (
-    <div className="space-y-8">
+  const renderPatientView = () => (
+    <>
       <Alert className="bg-primary/10 border-primary/30">
         <Users className="h-5 w-5 text-primary" />
         <AlertTitle className="font-headline text-primary">Consultas Médicas de {profile.name}</AlertTitle>
@@ -147,6 +155,22 @@ export function AppointmentManager() {
              </DialogContent>
          </Dialog>
       </div>
+    </>
+  );
+
+  const renderDoctorView = () => (
+     <Alert className="bg-primary/10 border-primary/30">
+        <CalendarDays className="h-5 w-5 text-primary" />
+        <AlertTitle className="font-headline text-primary">Agenda de Consultas</AlertTitle>
+        <AlertDescription>
+          Visualize todas as consultas agendadas e o histórico. O status pode ser atualizado para manter os registros em dia.
+        </AlertDescription>
+      </Alert>
+  );
+
+  return (
+    <div className="space-y-8">
+      {persona === 'paciente' ? renderPatientView() : renderDoctorView()}
 
       <Tabs defaultValue="upcoming" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
