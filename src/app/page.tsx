@@ -27,7 +27,11 @@ export default function WelcomePage() {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push('/dashboard');
+    if (selectedPersona === 'medico') {
+        router.push('/appointments');
+    } else {
+        router.push('/dashboard');
+    }
   };
 
   const handleNumericInput = (e: React.ChangeEvent<HTMLInputElement>, setter: (v: string) => void) => {
