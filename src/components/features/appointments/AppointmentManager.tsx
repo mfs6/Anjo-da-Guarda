@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentCard } from "./AppointmentCard";
+import { DoctorAppointmentCard } from "./DoctorAppointmentCard";
 import { Users, PlusCircle, ArrowRight, ArrowLeft, CalendarDays } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
 import { AppointmentScheduler } from './AppointmentScheduler';
@@ -44,12 +45,13 @@ export function AppointmentManager() {
     );
   };
   
-  const handleAppointmentScheduled = (newAppointmentData: Omit<Appointment, 'id' | 'childId' | 'status'>) => {
+  const handleAppointmentScheduled = (newAppointmentData: Omit<Appointment, 'id' | 'childId' | 'status' | 'patientName'>) => {
     const newAppointment: Appointment = {
         ...newAppointmentData,
         id: `apt_${Date.now()}`,
         childId: profile.id,
         status: 'scheduled',
+        patientName: profile.name,
     };
     setAppointments(prev => [newAppointment, ...prev]);
     handleCloseModal(); // Close and reset modal
@@ -181,6 +183,8 @@ export function AppointmentManager() {
           {upcomingAppointments.length > 0 ? (
             <div className="space-y-6">
               {upcomingAppointments.map(apt => (
+                persona === 'medico' ? 
+                <DoctorAppointmentCard key={apt.id} appointment={apt} onUpdateStatus={handleUpdateAppointmentStatus} /> :
                 <AppointmentCard key={apt.id} appointment={apt} onUpdateStatus={handleUpdateAppointmentStatus} />
               ))}
             </div>
@@ -192,6 +196,8 @@ export function AppointmentManager() {
           {pastAppointments.length > 0 ? (
             <div className="space-y-6">
               {pastAppointments.map(apt => (
+                persona === 'medico' ?
+                <DoctorAppointmentCard key={apt.id} appointment={apt} onUpdateStatus={handleUpdateAppointmentStatus} /> :
                 <AppointmentCard key={apt.id} appointment={apt} onUpdateStatus={handleUpdateAppointmentStatus} />
               ))}
             </div>

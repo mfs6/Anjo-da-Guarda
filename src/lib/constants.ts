@@ -105,6 +105,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt1',
     childId: DEFAULT_CHILD_ID,
+    patientName: 'Rafael Sabino Joviliano de Paula',
     professionalName: 'Dr. Ana Silva',
     specialty: 'Pediatra',
     appointmentDate: formatDate(tomorrow),
@@ -116,6 +117,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt2',
     childId: DEFAULT_CHILD_ID,
+    patientName: 'Rafael Sabino Joviliano de Paula',
     professionalName: 'Dra. Carla Mendes',
     specialty: 'Dentista Pediátrico',
     appointmentDate: formatDate(nextMonth),
@@ -127,6 +129,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt3',
     childId: DEFAULT_CHILD_ID,
+    patientName: 'Rafael Sabino Joviliano de Paula',
     professionalName: 'Dr. João Santos',
     specialty: 'Oftalmologista',
     appointmentDate: formatDate(lastWeek),
@@ -138,6 +141,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt4',
     childId: DEFAULT_CHILD_ID,
+    patientName: 'Rafael Sabino Joviliano de Paula',
     professionalName: 'Dr. Pedro Lima',
     specialty: 'Fisioterapeuta',
     appointmentDate: formatDate(twoMonthsAgo),

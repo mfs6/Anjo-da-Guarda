@@ -19,7 +19,7 @@ import {
 import { CalendarPlus, ArrowLeft } from 'lucide-react';
 import type { Appointment } from '@/lib/types';
 
-type AppointmentFormValues = Omit<Appointment, 'id' | 'childId' | 'status'>;
+type AppointmentFormValues = Omit<Appointment, 'id' | 'childId' | 'status' | 'patientName'>;
 
 const appointmentSchema = z.object({
   professionalName: z.string().min(3, { message: 'Nome do profissional é obrigatório.' }),

@@ -47,6 +47,7 @@ export interface SymptomCheckerResult {
 export interface Appointment {
   id: string;
   childId: string;
+  patientName: string;
   professionalName: string;
   specialty: string;
   appointmentDate: string; // YYYY-MM-DD
