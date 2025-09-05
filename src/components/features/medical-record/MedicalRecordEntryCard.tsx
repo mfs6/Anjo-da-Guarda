@@ -11,11 +11,12 @@ import { Stethoscope, AlertTriangle, FileText, Syringe, Edit3, Trash2, Paperclip
 
 interface MedicalRecordEntryCardProps {
   entry: MedicalRecordEntry;
-  // onEdit?: (entryId: string) => void; // Future functionality
-  // onDelete?: (entryId: string) => void; // Future functionality
+  onEdit: (entry: MedicalRecordEntry) => void;
+  onDelete: (entryId: string) => void;
+  persona: 'medico' | 'paciente' | null;
 }
 
-export function MedicalRecordEntryCard({ entry }: MedicalRecordEntryCardProps) {
+export function MedicalRecordEntryCard({ entry, onEdit, onDelete, persona }: MedicalRecordEntryCardProps) {
   const getEntryIcon = () => {
     switch (entry.entryType) {
       case "Consulta":
@@ -54,7 +55,7 @@ export function MedicalRecordEntryCard({ entry }: MedicalRecordEntryCardProps) {
       <CardContent className="space-y-3">
         <div>
           <h4 className="text-sm font-semibold text-foreground">Resumo:</h4>
-          <p className="text-sm text-muted-foreground whitespace-pre-line">{entry.summary}</p>
+          <p className="text-sm text-muted-foreground whitespace-pre-line">{entry.summary || "Nenhum resumo adicionado."}</p>
         </div>
         {entry.attachments && entry.attachments.length > 0 && (
           <div>
@@ -77,16 +78,16 @@ export function MedicalRecordEntryCard({ entry }: MedicalRecordEntryCardProps) {
           </div>
         )}
       </CardContent>
-      <CardFooter className="flex justify-end gap-2 pt-4">
-        {/* Placeholder for future Edit/Delete functionality 
-        <Button variant="outline" size="sm" onClick={() => alert('Editar: ' + entry.id)}>
-          <Edit3 className="mr-2 h-4 w-4" /> Editar
-        </Button>
-        <Button variant="destructive" size="sm" onClick={() => alert('Excluir: ' + entry.id)}>
-          <Trash2 className="mr-2 h-4 w-4" /> Excluir
-        </Button>
-        */}
-      </CardFooter>
+      {persona === 'medico' && (
+         <CardFooter className="flex justify-end gap-2 pt-4">
+            <Button variant="outline" size="sm" onClick={() => onEdit(entry)}>
+            <Edit3 className="mr-2 h-4 w-4" /> Editar
+            </Button>
+            <Button variant="destructive" size="sm" onClick={() => onDelete(entry.id)}>
+            <Trash2 className="mr-2 h-4 w-4" /> Excluir
+            </Button>
+         </CardFooter>
+      )}
     </Card>
   );
 }

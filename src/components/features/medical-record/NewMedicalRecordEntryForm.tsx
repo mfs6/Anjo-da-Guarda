@@ -1,7 +1,7 @@
 
 "use client";
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -40,11 +40,13 @@ const medicalRecordSchema = z.object({
 interface NewMedicalRecordEntryFormProps {
   onSubmit: (data: MedicalRecordFormValues) => void;
   onCancel: () => void;
+  existingEntry?: MedicalRecordEntry | null;
 }
 
 export function NewMedicalRecordEntryForm({
   onSubmit,
   onCancel,
+  existingEntry,
 }: NewMedicalRecordEntryFormProps) {
   const form = useForm<MedicalRecordFormValues>({
     resolver: zodResolver(medicalRecordSchema),
@@ -59,22 +61,36 @@ export function NewMedicalRecordEntryForm({
     },
   });
 
+  useEffect(() => {
+    if (existingEntry) {
+      form.reset(existingEntry);
+    } else {
+        form.reset({
+            title: '',
+            entryType: undefined,
+            date: new Date().toISOString().split('T')[0],
+            time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
+            professionalOrLocation: '',
+            summary: '',
+            attachments: []
+        });
+    }
+  }, [existingEntry, form]);
+
+
   const handleSubmit: SubmitHandler<MedicalRecordFormValues> = (data) => {
     onSubmit(data);
     form.reset();
   };
   
-  // A simple implementation for demo purposes
   const handleAttachmentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const url = e.target.value;
       if (url) {
           try {
-              // Attempt to create a URL object to validate
               const urlObject = new URL(url);
-              const name = urlObject.hostname; // Use hostname as a placeholder name
+              const name = urlObject.hostname;
               form.setValue('attachments', [{ name: `Anexo - ${name}`, url: url }]);
           } catch (error) {
-              // Handle invalid URL if needed, though zod will catch it
               form.setValue('attachments', []);
           }
       } else {
@@ -192,10 +208,7 @@ export function NewMedicalRecordEntryForm({
                              <Input 
                                 placeholder="Cole a URL de um anexo (ex: exame.pdf)" 
                                 className="pl-9"
-                                // Use a temporary input to capture the URL
                                 onChange={handleAttachmentChange}
-                                // The field value is an array, so we can't bind directly.
-                                // This is a simplified approach for one attachment.
                              />
                         </div>
                     </FormControl>
@@ -212,7 +225,7 @@ export function NewMedicalRecordEntryForm({
           </Button>
           <Button type="submit">
             <Save className="mr-2 h-4 w-4" />
-            Salvar Entrada
+            Salvar
           </Button>
         </div>
       </form>

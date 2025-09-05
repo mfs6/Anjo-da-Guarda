@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { MedicalRecordEntryCard } from "./MedicalRecordEntryCard";
 import { ShieldCheck, FileText, Info, PlusCircle, Filter } from "lucide-react";
 import { parseISO } from 'date-fns';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { NewMedicalRecordEntryForm } from './NewMedicalRecordEntryForm';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from '@/components/ui/label';
@@ -26,6 +27,8 @@ export function MedicalRecordManager() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [persona, setPersona] = useState<Persona | null>(null);
   const [filterType, setFilterType] = useState<MedicalRecordEntryType | 'all'>('all');
+  const [entryToEdit, setEntryToEdit] = useState<MedicalRecordEntry | null>(null);
+  const [entryToDelete, setEntryToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -38,14 +41,46 @@ export function MedicalRecordManager() {
     alert("Funcionalidade de exportar prontuário como PDF a ser implementada. Este PDF incluiria todas as entradas listadas, com detalhes sobre recomendações médicas e remédios a serem administrados, conforme registrado.");
   };
 
-  const handleAddEntry = (newEntryData: Omit<MedicalRecordEntry, 'id' | 'childId'>) => {
-    const newEntry: MedicalRecordEntry = {
-      ...newEntryData,
-      id: `mr_${Date.now()}`,
-      childId: profile.id, // Assuming the doctor is adding to the current patient's profile
-    };
-    setEntries(prev => [newEntry, ...prev]);
-    setIsModalOpen(false); // Close modal on successful submission
+  const handleOpenEditModal = (entry: MedicalRecordEntry) => {
+    setEntryToEdit(entry);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenAddModal = () => {
+    setEntryToEdit(null);
+    setIsModalOpen(true);
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEntryToEdit(null);
+  }
+
+  const handleDelete = () => {
+    if (entryToDelete) {
+        setEntries(prev => prev.filter(entry => entry.id !== entryToDelete));
+        setEntryToDelete(null);
+    }
+  }
+
+
+  const handleFormSubmit = (formData: Omit<MedicalRecordEntry, 'id' | 'childId'>) => {
+    if (entryToEdit) { // Editing existing entry
+      const updatedEntry: MedicalRecordEntry = {
+        ...formData,
+        id: entryToEdit.id,
+        childId: profile.id,
+      };
+      setEntries(prev => prev.map(entry => entry.id === entryToEdit.id ? updatedEntry : entry));
+    } else { // Adding new entry
+      const newEntry: MedicalRecordEntry = {
+        ...formData,
+        id: `mr_${Date.now()}`,
+        childId: profile.id,
+      };
+      setEntries(prev => [newEntry, ...prev]);
+    }
+    handleCloseModal();
   };
 
   const sortedEntries = [...entries]
@@ -80,55 +115,62 @@ export function MedicalRecordManager() {
     <div className="space-y-8">
       {persona === 'paciente' ? renderPatientAlert() : renderDoctorAlert()}
 
-      <div className="flex flex-col sm:flex-row justify-end items-center gap-4">
-        {persona === 'medico' && (
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
-             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-              <DialogTrigger asChild>
-                <Button className="w-full sm:w-auto">
-                  <PlusCircle className="mr-2 h-5 w-5" />
-                  Adicionar Entrada
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-lg">
-                <DialogHeader>
-                  <DialogTitle>Nova Entrada no Prontuário</DialogTitle>
-                </DialogHeader>
-                <NewMedicalRecordEntryForm
-                  onSubmit={handleAddEntry}
-                  onCancel={() => setIsModalOpen(false)}
-                />
-              </DialogContent>
-            </Dialog>
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-                 <Label htmlFor="filter-select" className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filtrar por</Label>
-                 <Select
-                   value={filterType}
-                   onValueChange={(value) => setFilterType(value as MedicalRecordEntryType | 'all')}
-                 >
-                   <SelectTrigger id="filter-select" className="w-full sm:w-[180px]">
-                     <SelectValue placeholder="Filtrar por tipo..." />
-                   </SelectTrigger>
-                   <SelectContent>
-                     <SelectItem value="all">Todos os Tipos</SelectItem>
-                     {entryTypes.map(type => (
-                       <SelectItem key={type} value={type}>{type}</SelectItem>
-                     ))}
-                   </SelectContent>
-                 </Select>
+       <Dialog open={isModalOpen} onOpenChange={(open) => { if (!open) handleCloseModal(); else setIsModalOpen(true); }}>
+        <div className="flex flex-col sm:flex-row justify-end items-center gap-4">
+          {persona === 'medico' && (
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
+              <Button onClick={handleOpenAddModal} className="w-full sm:w-auto">
+                <PlusCircle className="mr-2 h-5 w-5" />
+                Adicionar Entrada
+              </Button>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                   <Label htmlFor="filter-select" className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filtrar por</Label>
+                   <Select
+                     value={filterType}
+                     onValueChange={(value) => setFilterType(value as MedicalRecordEntryType | 'all')}
+                   >
+                     <SelectTrigger id="filter-select" className="w-full sm:w-[180px]">
+                       <SelectValue placeholder="Filtrar por tipo..." />
+                     </SelectTrigger>
+                     <SelectContent>
+                       <SelectItem value="all">Todos os Tipos</SelectItem>
+                       {entryTypes.map(type => (
+                         <SelectItem key={type} value={type}>{type}</SelectItem>
+                       ))}
+                     </SelectContent>
+                   </Select>
+              </div>
             </div>
-          </div>
-        )}
-        <Button onClick={handleExportPdf} variant="outline" className="w-full sm:w-auto">
-          <FileText className="mr-2 h-5 w-5" />
-          Exportar (PDF)
-        </Button>
-      </div>
+          )}
+          <Button onClick={handleExportPdf} variant="outline" className="w-full sm:w-auto">
+            <FileText className="mr-2 h-5 w-5" />
+            Exportar (PDF)
+          </Button>
+        </div>
+        
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{entryToEdit ? 'Editar Entrada no Prontuário' : 'Nova Entrada no Prontuário'}</DialogTitle>
+          </DialogHeader>
+          <NewMedicalRecordEntryForm
+            onSubmit={handleFormSubmit}
+            onCancel={handleCloseModal}
+            existingEntry={entryToEdit}
+          />
+        </DialogContent>
+      </Dialog>
+      
 
       {filteredAndSortedEntries.length > 0 ? (
         <div className="space-y-6">
           {filteredAndSortedEntries.map(entry => (
-            <MedicalRecordEntryCard key={entry.id} entry={entry} />
+            <MedicalRecordEntryCard 
+              key={entry.id} 
+              entry={entry} 
+              onEdit={handleOpenEditModal}
+              onDelete={() => setEntryToDelete(entry.id)}
+              persona={persona}
+              />
           ))}
         </div>
       ) : (
@@ -143,6 +185,21 @@ export function MedicalRecordManager() {
           </AlertDescription>
         </Alert>
       )}
+
+      <AlertDialog open={!!entryToDelete} onOpenChange={() => setEntryToDelete(null)}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+                <AlertDialogDescription>
+                    Esta ação não pode ser desfeita. Isso excluirá permanentemente a entrada do prontuário.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setEntryToDelete(null)}>Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
