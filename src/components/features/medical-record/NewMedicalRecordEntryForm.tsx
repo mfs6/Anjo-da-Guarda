@@ -25,12 +25,12 @@ type MedicalRecordFormValues = Omit<MedicalRecordEntry, 'id' | 'childId'>;
 const entryTypes: MedicalRecordEntryType[] = ['Consulta', 'Emergência', 'Exame', 'Vacinação', 'Observação'];
 
 const medicalRecordSchema = z.object({
-  title: z.string().min(3, { message: 'O título é obrigatório.' }),
+  title: z.string().min(1, { message: 'O título é obrigatório.' }),
   entryType: z.enum(entryTypes, { required_error: 'O tipo de entrada é obrigatório.' }),
   date: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), { message: 'Data inválida. Use o formato AAAA-MM-DD.' }),
   time: z.string().regex(/^\d{2}:\d{2}$/, { message: 'Horário inválido. Use o formato HH:MM.' }).optional().or(z.literal("")),
-  professionalOrLocation: z.string().optional(),
-  summary: z.string().min(10, { message: 'O resumo precisa ter pelo menos 10 caracteres.' }),
+  professionalOrLocation: z.string().min(1, { message: 'O profissional ou local é obrigatório.' }),
+  summary: z.string().optional(),
   attachments: z.any().optional(), // Simplificado por enquanto
 });
 
@@ -135,7 +135,7 @@ export function NewMedicalRecordEntryForm({
           name="professionalOrLocation"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Profissional ou Local (Opcional)</FormLabel>
+              <FormLabel>Profissional ou Local</FormLabel>
               <FormControl>
                 <Input placeholder="Ex: Dr. Ana Silva" {...field} />
               </FormControl>
@@ -149,7 +149,7 @@ export function NewMedicalRecordEntryForm({
           name="summary"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Resumo / Detalhes</FormLabel>
+              <FormLabel>Resumo / Detalhes (Opcional)</FormLabel>
               <FormControl>
                 <Textarea placeholder="Descreva os detalhes da consulta, diagnóstico, tratamento, etc." {...field} rows={5} />
               </FormControl>

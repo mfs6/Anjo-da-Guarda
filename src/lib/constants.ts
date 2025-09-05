@@ -77,7 +77,7 @@ export const NUTRITION_TIPS: NutritionTip[] = [
 
 export const MOCK_CHILD_PROFILE: ChildProfile = {
   id: DEFAULT_CHILD_ID,
-  name: "Rafael Sabino Joviliano de Paula",
+  name: "Rafael Sabino",
   dob: "2023-03-15", // YYYY-MM-DD
   profilePictureUrl: "https://placehold.co/100x100.png"
 };
@@ -105,7 +105,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt1',
     childId: DEFAULT_CHILD_ID,
-    patientName: 'Rafael Sabino Joviliano de Paula',
+    patientName: 'Rafael Sabino',
     professionalName: 'Dr. Ana Silva',
     specialty: 'Pediatra',
     appointmentDate: formatDate(tomorrow),
@@ -117,7 +117,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt2',
     childId: DEFAULT_CHILD_ID,
-    patientName: 'Rafael Sabino Joviliano de Paula',
+    patientName: 'Rafael Sabino',
     professionalName: 'Dra. Carla Mendes',
     specialty: 'Dentista Pediátrico',
     appointmentDate: formatDate(nextMonth),
@@ -129,7 +129,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt3',
     childId: DEFAULT_CHILD_ID,
-    patientName: 'Rafael Sabino Joviliano de Paula',
+    patientName: 'Rafael Sabino',
     professionalName: 'Dr. João Santos',
     specialty: 'Oftalmologista',
     appointmentDate: formatDate(lastWeek),
@@ -141,7 +141,7 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt4',
     childId: DEFAULT_CHILD_ID,
-    patientName: 'Rafael Sabino Joviliano de Paula',
+    patientName: 'Rafael Sabino',
     professionalName: 'Dr. Pedro Lima',
     specialty: 'Fisioterapeuta',
     appointmentDate: formatDate(twoMonthsAgo),
