@@ -38,7 +38,7 @@ export default function WelcomePage() {
             if (typeof window !== 'undefined') {
                 localStorage.setItem('doctorProfile', JSON.stringify(doctorProfile));
             }
-            router.push('/appointments');
+            router.push('/doctor-profile');
         } else {
             setLoginError('CRM não encontrado. Por favor, verifique o número e tente novamente.');
         }

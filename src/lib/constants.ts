@@ -11,10 +11,11 @@ export const NAV_ITEMS: NavItem[] = [
   //{ title: "Sintomas", href: "/symptoms", icon: HeartPulse, persona: 'paciente' },
   { title: "Marcos", href: "/milestones", icon: Star, persona: 'paciente' },
   { title: "Nutrição", href: "/nutrition", icon: Apple, persona: 'paciente' },
+  { title: "Perfil Médico", href: "/doctor-profile", icon: Stethoscope, persona: 'medico' },
   { title: "Consultas", href: "/appointments", icon: Users, persona: 'all' },
   { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'all' },
   { title: "Perfil", href: "/profile", icon: User, persona: 'paciente' },
-  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'paciente' },
+  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'all' },
 ];
 
 export const INITIAL_VACCINES: Vaccine[] = [
@@ -100,7 +101,7 @@ export const MOCK_CHILD_PROFILES: ChildProfile[] = [
   },
   {
     id: "child4",
-    name: "Kaio Italo",
+    name: "Sofia Almeida",
     dob: "2023-08-05", // YYYY-MM-DD
     profilePictureUrl: "https://i.pinimg.com/736x/a6/99/98/a69998b5450a68c8b388e384527c574c.jpg",
     cpf: "44444444444"
@@ -131,7 +132,7 @@ export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
   },
   {
     id: "physiotherapistDoctor",
-    name: "Dra. Pedro Lima",
+    name: "Dr. Pedro Lima",
     crm: "44444",
     specialty: "Fisioterapeuta",
   }
