@@ -82,12 +82,20 @@ export const MOCK_CHILD_PROFILE: ChildProfile = {
   profilePictureUrl: "https://images3.alphacoders.com/654/654249.png"
 };
 
-export const MOCK_DOCTOR_PROFILE: DoctorProfile = {
-  id: "defaultDoctor",
-  name: "Dra. Ana Silva",
-  crm: "12345",
-  specialty: "Pediatra",
-};
+export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
+  {
+    id: "defaultDoctor",
+    name: "Dra. Ana Silva",
+    crm: "12345",
+    specialty: "Pediatra",
+  },
+  {
+    id: "dentistDoctor",
+    name: "Dr. Carlos Oliveira",
+    crm: "54321",
+    specialty: "Dentista Pediátrico",
+  }
+];
 
 const today = new Date();
 const tomorrow = new Date(today);
