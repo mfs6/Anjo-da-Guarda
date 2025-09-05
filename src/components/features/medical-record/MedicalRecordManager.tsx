@@ -117,35 +117,37 @@ export function MedicalRecordManager() {
 
        <Dialog open={isModalOpen} onOpenChange={(open) => { if (!open) handleCloseModal(); else setIsModalOpen(true); }}>
         <div className="flex flex-col sm:flex-row justify-end items-center gap-4">
-          {persona === 'medico' && (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
-              <Button onClick={handleOpenAddModal} className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-5 w-5" />
-                Adicionar Entrada
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 w-full">
+              {persona === 'medico' && (
+                <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <Button onClick={handleOpenAddModal} className="w-auto">
+                      <PlusCircle className="mr-2 h-5 w-5" />
+                      Adicionar Entrada
+                    </Button>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <Label htmlFor="filter-select" className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filtrar por</Label>
+                        <Select
+                          value={filterType}
+                          onValueChange={(value) => setFilterType(value as MedicalRecordEntryType | 'all')}
+                        >
+                          <SelectTrigger id="filter-select" className="w-full sm:w-[180px]">
+                            <SelectValue placeholder="Filtrar por tipo..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">Todos os Tipos</SelectItem>
+                            {entryTypes.map(type => (
+                              <SelectItem key={type} value={type}>{type}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+              )}
+               <Button onClick={handleExportPdf} variant="outline" className="w-full sm:w-auto ml-auto">
+                <FileText className="mr-2 h-5 w-5" />
+                Exportar (PDF)
               </Button>
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                   <Label htmlFor="filter-select" className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filtrar por</Label>
-                   <Select
-                     value={filterType}
-                     onValueChange={(value) => setFilterType(value as MedicalRecordEntryType | 'all')}
-                   >
-                     <SelectTrigger id="filter-select" className="w-full sm:w-[180px]">
-                       <SelectValue placeholder="Filtrar por tipo..." />
-                     </SelectTrigger>
-                     <SelectContent>
-                       <SelectItem value="all">Todos os Tipos</SelectItem>
-                       {entryTypes.map(type => (
-                         <SelectItem key={type} value={type}>{type}</SelectItem>
-                       ))}
-                     </SelectContent>
-                   </Select>
-              </div>
-            </div>
-          )}
-          <Button onClick={handleExportPdf} variant="outline" className="w-full sm:w-auto">
-            <FileText className="mr-2 h-5 w-5" />
-            Exportar (PDF)
-          </Button>
+          </div>
         </div>
         
         <DialogContent className="sm:max-w-lg">
@@ -196,7 +198,7 @@ export function MedicalRecordManager() {
             </AlertDialogHeader>
             <AlertDialogFooter>
                 <AlertDialogCancel onClick={() => setEntryToDelete(null)}>Cancelar</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>Excluir</AlertDialogAction>
+                <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Excluir</AlertDialogAction>
             </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

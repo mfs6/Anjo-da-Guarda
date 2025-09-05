@@ -209,6 +209,7 @@ export function NewMedicalRecordEntryForm({
                                 placeholder="Cole a URL de um anexo (ex: exame.pdf)" 
                                 className="pl-9"
                                 onChange={handleAttachmentChange}
+                                defaultValue={field.value?.[0]?.url || ""}
                              />
                         </div>
                     </FormControl>

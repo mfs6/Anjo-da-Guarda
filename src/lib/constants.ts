@@ -13,7 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Consultas", href: "/appointments", icon: Users, persona: 'all' },
   { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'all' },
   { title: "Perfil", href: "/profile", icon: User, persona: 'paciente' },
-  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'medico' },
+  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'paciente' },
 ];
 
 export const INITIAL_VACCINES: Vaccine[] = [
@@ -94,6 +94,18 @@ export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
     name: "Dr. Carlos Oliveira",
     crm: "54321",
     specialty: "Dentista Pediátrico",
+  },
+  {
+    id: "opthalmologistDoctor",
+    name: "Dr. João Santos",
+    crm: "67890",
+    specialty: "Oftalmologista",
+  },
+  {
+    id: "physiotherapistDoctor",
+    name: "Dra. Pedro Lima",
+    crm: "09876",
+    specialty: "Fisioterapeuta",
   }
 ];
 
@@ -194,6 +206,7 @@ export const INITIAL_MEDICAL_RECORD_ENTRIES: MedicalRecordEntry[] = [
     childId: DEFAULT_CHILD_ID,
     entryType: 'Vacinação',
     date: formatDate(oneMonthAgo),
+    time: "10:00",
     title: 'Vacina Pentavalente - Reforço',
     professionalOrLocation: 'Posto de Saúde Central',
     summary: 'Administrada dose de reforço da vacina Pentavalente. Sem reações adversas imediatas.',
