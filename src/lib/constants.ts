@@ -1,5 +1,5 @@
 
-import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, MedicalRecordEntry, NavItem } from './types';
+import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, MedicalRecordEntry, NavItem, DoctorProfile } from './types';
 import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users, FileText, HeartPulse } from 'lucide-react';
 
 export const APP_NAME = "Anjo da Guarda";
@@ -80,6 +80,13 @@ export const MOCK_CHILD_PROFILE: ChildProfile = {
   name: "Rafael Sabino",
   dob: "2023-03-15", // YYYY-MM-DD
   profilePictureUrl: "https://images3.alphacoders.com/654/654249.png"
+};
+
+export const MOCK_DOCTOR_PROFILE: DoctorProfile = {
+  id: "defaultDoctor",
+  name: "Dra. Ana Silva",
+  crm: "12345",
+  specialty: "Pediatra",
 };
 
 const today = new Date();

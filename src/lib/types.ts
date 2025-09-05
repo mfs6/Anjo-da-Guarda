@@ -6,6 +6,13 @@ export interface ChildProfile {
   profilePictureUrl?: string;
 }
 
+export interface DoctorProfile {
+  id: string;
+  name: string;
+  crm: string;
+  specialty: string;
+}
+
 export interface Vaccine {
   id: string;
   name: string;
