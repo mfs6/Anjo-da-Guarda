@@ -171,7 +171,7 @@ export function AppointmentManager() {
   const renderDoctorView = () => (
      <>
         {doctorProfile && (
-           <Alert className="bg-primary/10 border-primary/30">
+           <Alert className="bg-primary/10 border-primary/30 mb-8">
              <UserCheck className="h-5 w-5 text-primary" />
              <AlertTitle className="font-headline text-primary">Boas-vindas, {doctorProfile.name}!</AlertTitle>
              <AlertDescription>
