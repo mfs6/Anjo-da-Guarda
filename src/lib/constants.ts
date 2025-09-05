@@ -82,28 +82,28 @@ export const MOCK_CHILD_PROFILES: ChildProfile[] = [
     name: "Rafael Sabino",
     dob: "2023-03-15", // YYYY-MM-DD
     profilePictureUrl: "https://images3.alphacoders.com/654/654249.png",
-    cpf: "11122233344"
+    cpf: "11111111111"
   },
   {
     id: "child2",
     name: "Laura Mendes",
     dob: "2022-11-20", // YYYY-MM-DD
-    profilePictureUrl: "https://placehold.co/200x200/E8C3A9/4A2719?text=LM&font=sans",
-    cpf: "22233344455"
+    profilePictureUrl: "https://i.pinimg.com/736x/e1/0e/77/e10e7727db11e1ebc414d36c4792713b.jpg",
+    cpf: "22222222222"
   },
   {
     id: "child3",
     name: "Miguel Costa",
     dob: "2024-01-10", // YYYY-MM-DD
-    profilePictureUrl: "https://placehold.co/200x200/B2D8E6/2E4045?text=MC&font=sans",
-    cpf: "33344455566"
+    profilePictureUrl: "https://i.pinimg.com/736x/0c/c8/e9/0cc8e9e341e330d074c17311b9568be0.jpg",
+    cpf: "33333333333"
   },
   {
     id: "child4",
-    name: "Sofia Almeida",
+    name: "Kaio Italo",
     dob: "2023-08-05", // YYYY-MM-DD
-    profilePictureUrl: "https://placehold.co/200x200/F0D9E7/5B3A4F?text=SA&font=sans",
-    cpf: "44455566677"
+    profilePictureUrl: "https://i.pinimg.com/736x/a6/99/98/a69998b5450a68c8b388e384527c574c.jpg",
+    cpf: "44444444444"
   }
 ];
 
