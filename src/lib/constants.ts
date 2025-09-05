@@ -79,7 +79,7 @@ export const MOCK_CHILD_PROFILE: ChildProfile = {
   id: DEFAULT_CHILD_ID,
   name: "Rafael Sabino",
   dob: "2023-03-15", // YYYY-MM-DD
-  profilePictureUrl: "https://placehold.co/100x100.png"
+  profilePictureUrl: "https://images3.alphacoders.com/654/654249.png"
 };
 
 const today = new Date();
