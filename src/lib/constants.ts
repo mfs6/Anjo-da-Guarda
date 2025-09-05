@@ -12,7 +12,7 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Marcos", href: "/milestones", icon: Star, persona: 'paciente' },
   { title: "Nutrição", href: "/nutrition", icon: Apple, persona: 'paciente' },
   { title: "Consultas", href: "/appointments", icon: Users, persona: 'all' },
-  { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'medico' },
+  { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'all' },
   { title: "Perfil", href: "/profile", icon: User, persona: 'paciente' },
 ];
 
