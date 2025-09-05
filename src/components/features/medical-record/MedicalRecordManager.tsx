@@ -82,7 +82,24 @@ export function MedicalRecordManager() {
 
       <div className="flex flex-col sm:flex-row justify-end items-center gap-4">
         {persona === 'medico' && (
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 w-full sm:w-auto">
+             <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+              <DialogTrigger asChild>
+                <Button className="w-full sm:w-auto">
+                  <PlusCircle className="mr-2 h-5 w-5" />
+                  Adicionar Entrada
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                  <DialogTitle>Nova Entrada no Prontuário</DialogTitle>
+                </DialogHeader>
+                <NewMedicalRecordEntryForm
+                  onSubmit={handleAddEntry}
+                  onCancel={() => setIsModalOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
             <div className="flex items-center gap-2 w-full sm:w-auto">
                  <Label htmlFor="filter-select" className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filtrar por</Label>
                  <Select
@@ -100,23 +117,6 @@ export function MedicalRecordManager() {
                    </SelectContent>
                  </Select>
             </div>
-           <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger asChild>
-              <Button className="w-full sm:w-auto">
-                <PlusCircle className="mr-2 h-5 w-5" />
-                Adicionar Entrada
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-lg">
-              <DialogHeader>
-                <DialogTitle>Nova Entrada no Prontuário</DialogTitle>
-              </DialogHeader>
-              <NewMedicalRecordEntryForm
-                onSubmit={handleAddEntry}
-                onCancel={() => setIsModalOpen(false)}
-              />
-            </DialogContent>
-          </Dialog>
           </div>
         )}
         <Button onClick={handleExportPdf} variant="outline" className="w-full sm:w-auto">

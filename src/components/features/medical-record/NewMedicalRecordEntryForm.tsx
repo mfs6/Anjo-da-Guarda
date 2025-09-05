@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Save, Ban } from 'lucide-react';
+import { Save, Ban, Paperclip } from 'lucide-react';
 import type { MedicalRecordEntry, MedicalRecordEntryType } from '@/lib/types';
 
 type MedicalRecordFormValues = Omit<MedicalRecordEntry, 'id' | 'childId'>;
@@ -31,7 +31,10 @@ const medicalRecordSchema = z.object({
   time: z.string().regex(/^\d{2}:\d{2}$/, { message: 'Horário inválido.' }),
   professionalOrLocation: z.string().min(1, { message: 'O profissional e/ou local é obrigatório.' }),
   summary: z.string().optional(),
-  attachments: z.any().optional(), // Simplificado por enquanto
+  attachments: z.array(z.object({
+      name: z.string(),
+      url: z.string().url({message: "Por favor, insira uma URL válida para o anexo."})
+  })).optional(),
 });
 
 interface NewMedicalRecordEntryFormProps {
@@ -48,16 +51,35 @@ export function NewMedicalRecordEntryForm({
     defaultValues: {
       title: '',
       entryType: undefined,
-      date: new Date().toISOString().split('T')[0], // Default to today
-      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }), // Default to current time
+      date: new Date().toISOString().split('T')[0],
+      time: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }),
       professionalOrLocation: '',
       summary: '',
+      attachments: []
     },
   });
 
   const handleSubmit: SubmitHandler<MedicalRecordFormValues> = (data) => {
     onSubmit(data);
     form.reset();
+  };
+  
+  // A simple implementation for demo purposes
+  const handleAttachmentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const url = e.target.value;
+      if (url) {
+          try {
+              // Attempt to create a URL object to validate
+              const urlObject = new URL(url);
+              const name = urlObject.hostname; // Use hostname as a placeholder name
+              form.setValue('attachments', [{ name: `Anexo - ${name}`, url: url }]);
+          } catch (error) {
+              // Handle invalid URL if needed, though zod will catch it
+              form.setValue('attachments', []);
+          }
+      } else {
+          form.setValue('attachments', []);
+      }
   };
 
   return (
@@ -151,12 +173,37 @@ export function NewMedicalRecordEntryForm({
             <FormItem>
               <FormLabel>Resumo / Detalhes (Opcional)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Descreva os detalhes da consulta, diagnóstico, tratamento, etc." {...field} rows={5} />
+                <Textarea placeholder="Descreva os detalhes da consulta, diagnóstico, tratamento, etc." {...field} rows={4} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        <FormField
+            control={form.control}
+            name="attachments"
+            render={({ field }) => (
+                <FormItem>
+                    <FormLabel>Anexos (Opcional)</FormLabel>
+                     <FormControl>
+                        <div className="relative">
+                             <Paperclip className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                             <Input 
+                                placeholder="Cole a URL de um anexo (ex: exame.pdf)" 
+                                className="pl-9"
+                                // Use a temporary input to capture the URL
+                                onChange={handleAttachmentChange}
+                                // The field value is an array, so we can't bind directly.
+                                // This is a simplified approach for one attachment.
+                             />
+                        </div>
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+            )}
+        />
+
 
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
