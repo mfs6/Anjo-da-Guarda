@@ -3,7 +3,7 @@ import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, Medic
 import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users, FileText, HeartPulse } from 'lucide-react';
 
 export const APP_NAME = "Anjo da Guarda";
-export const DEFAULT_CHILD_ID = "defaultChild";
+export const DEFAULT_CHILD_ID = "child1";
 
 export const NAV_ITEMS: NavItem[] = [
   { title: "Painel", href: "/dashboard", icon: Activity, persona: 'paciente' },
@@ -13,7 +13,7 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Consultas", href: "/appointments", icon: Users, persona: 'all' },
   { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'all' },
   { title: "Perfil", href: "/profile", icon: User, persona: 'paciente' },
-  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'paciente' },
+  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'all' },
 ];
 
 export const INITIAL_VACCINES: Vaccine[] = [
@@ -75,12 +75,35 @@ export const NUTRITION_TIPS: NutritionTip[] = [
   { id: 'tip10', ageGroup: '2-3 anos', title: 'Lidando com Seletividade Alimentar', content: 'Continue oferecendo uma variedade de alimentos de forma paciente e sem pressão. Às vezes, são necessárias várias tentativas para aceitar um novo sabor.' },
 ];
 
-export const MOCK_CHILD_PROFILE: ChildProfile = {
-  id: DEFAULT_CHILD_ID,
-  name: "Rafael Sabino",
-  dob: "2023-03-15", // YYYY-MM-DD
-  profilePictureUrl: "https://images3.alphacoders.com/654/654249.png"
-};
+export const MOCK_CHILD_PROFILES: ChildProfile[] = [
+  {
+    id: "child1",
+    name: "Rafael Sabino",
+    dob: "2023-03-15", // YYYY-MM-DD
+    profilePictureUrl: "https://images3.alphacoders.com/654/654249.png"
+  },
+  {
+    id: "child2",
+    name: "Laura Mendes",
+    dob: "2022-11-20", // YYYY-MM-DD
+    profilePictureUrl: "https://placehold.co/200x200/E8C3A9/4A2719?text=LM&font=sans"
+  },
+  {
+    id: "child3",
+    name: "Miguel Costa",
+    dob: "2024-01-10", // YYYY-MM-DD
+    profilePictureUrl: "https://placehold.co/200x200/B2D8E6/2E4045?text=MC&font=sans"
+  },
+  {
+    id: "child4",
+    name: "Sofia Almeida",
+    dob: "2023-08-05", // YYYY-MM-DD
+    profilePictureUrl: "https://placehold.co/200x200/F0D9E7/5B3A4F?text=SA&font=sans"
+  }
+];
+
+export const MOCK_CHILD_PROFILE = MOCK_CHILD_PROFILES[0];
+
 
 export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
   {
@@ -122,6 +145,8 @@ const threeDaysAgo = new Date(today);
 threeDaysAgo.setDate(today.getDate() - 3);
 const oneMonthAgo = new Date(today);
 oneMonthAgo.setMonth(today.getMonth() -1);
+const fifteenDaysLater = new Date(today);
+fifteenDaysLater.setDate(today.getDate() + 15);
 
 
 const formatDate = (date: Date): string => {
@@ -131,9 +156,9 @@ const formatDate = (date: Date): string => {
 export const INITIAL_APPOINTMENTS: Appointment[] = [
   {
     id: 'apt1',
-    childId: DEFAULT_CHILD_ID,
+    childId: 'child1',
     patientName: 'Rafael Sabino',
-    professionalName: 'Dr. Ana Silva',
+    professionalName: 'Dra. Ana Silva',
     specialty: 'Pediatra',
     appointmentDate: formatDate(tomorrow),
     appointmentTime: '10:00',
@@ -143,9 +168,9 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   },
   {
     id: 'apt2',
-    childId: DEFAULT_CHILD_ID,
-    patientName: 'Rafael Sabino',
-    professionalName: 'Dra. Carla Mendes',
+    childId: 'child2',
+    patientName: 'Laura Mendes',
+    professionalName: 'Dr. Carlos Oliveira',
     specialty: 'Dentista Pediátrico',
     appointmentDate: formatDate(nextMonth),
     appointmentTime: '14:30',
@@ -155,8 +180,8 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   },
   {
     id: 'apt3',
-    childId: DEFAULT_CHILD_ID,
-    patientName: 'Rafael Sabino',
+    childId: 'child3',
+    patientName: 'Miguel Costa',
     professionalName: 'Dr. João Santos',
     specialty: 'Oftalmologista',
     appointmentDate: formatDate(lastWeek),
@@ -167,8 +192,8 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
   },
   {
     id: 'apt4',
-    childId: DEFAULT_CHILD_ID,
-    patientName: 'Rafael Sabino',
+    childId: 'child4',
+    patientName: 'Sofia Almeida',
     professionalName: 'Dr. Pedro Lima',
     specialty: 'Fisioterapeuta',
     appointmentDate: formatDate(twoMonthsAgo),
@@ -177,12 +202,25 @@ export const INITIAL_APPOINTMENTS: Appointment[] = [
     location: 'Clínica Reabilitar',
     notes: 'Sessão cancelada devido a imprevisto.'
   },
+    {
+    id: 'apt5',
+    childId: 'child1',
+    patientName: 'Rafael Sabino',
+    professionalName: 'Dra. Ana Silva',
+    specialty: 'Pediatra',
+    appointmentDate: formatDate(fifteenDaysLater),
+    appointmentTime: '11:00',
+    status: 'scheduled',
+    location: 'Clínica Infantil Bem-Estar, Sala 3',
+    notes: 'Retorno para avaliação de tosse persistente.'
+  },
 ];
 
 export const INITIAL_MEDICAL_RECORD_ENTRIES: MedicalRecordEntry[] = [
   {
     id: 'mr1',
-    childId: DEFAULT_CHILD_ID,
+    childId: 'child3',
+    patientName: 'Miguel Costa',
     entryType: 'Consulta',
     date: formatDate(lastWeek),
     time: '09:00',
@@ -193,7 +231,8 @@ export const INITIAL_MEDICAL_RECORD_ENTRIES: MedicalRecordEntry[] = [
   },
   {
     id: 'mr2',
-    childId: DEFAULT_CHILD_ID,
+    childId: 'child1',
+    patientName: 'Rafael Sabino',
     entryType: 'Emergência',
     date: formatDate(threeDaysAgo),
     time: '20:30',
@@ -203,7 +242,8 @@ export const INITIAL_MEDICAL_RECORD_ENTRIES: MedicalRecordEntry[] = [
   },
   {
     id: 'mr3',
-    childId: DEFAULT_CHILD_ID,
+    childId: 'child2',
+    patientName: 'Laura Mendes',
     entryType: 'Vacinação',
     date: formatDate(oneMonthAgo),
     time: "10:00",
@@ -213,7 +253,8 @@ export const INITIAL_MEDICAL_RECORD_ENTRIES: MedicalRecordEntry[] = [
   },
    {
     id: 'mr4',
-    childId: DEFAULT_CHILD_ID,
+    childId: 'child1',
+    patientName: 'Rafael Sabino',
     entryType: 'Consulta',
     date: formatDate(twoMonthsAgo),
     time: '15:00',

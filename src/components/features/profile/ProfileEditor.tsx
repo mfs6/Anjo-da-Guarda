@@ -48,7 +48,7 @@ export function ProfileEditor() {
       profilePictureUrl: profile.profilePictureUrl || '',
     });
     setPreviewImage(profile.profilePictureUrl || null);
-  }, [profile, form.reset]); // Using form.reset is more precise for dependencies
+  }, [profile, form]); // Using form.reset is more precise for dependencies
 
 
   const handleImageFileChange = (event: ChangeEvent<HTMLInputElement>) => {

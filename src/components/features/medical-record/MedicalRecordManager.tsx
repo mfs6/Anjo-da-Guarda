@@ -69,14 +69,18 @@ export function MedicalRecordManager() {
       const updatedEntry: MedicalRecordEntry = {
         ...formData,
         id: entryToEdit.id,
-        childId: profile.id,
+        childId: entryToEdit.childId, // Preserve original childId
+        patientName: entryToEdit.patientName, // Preserve original patientName
       };
       setEntries(prev => prev.map(entry => entry.id === entryToEdit.id ? updatedEntry : entry));
     } else { // Adding new entry
+      // This is a simplification. In a real app, you'd have a patient selector.
+      // For now, we'll assign to the default patient for new entries.
       const newEntry: MedicalRecordEntry = {
         ...formData,
         id: `mr_${Date.now()}`,
         childId: profile.id,
+        patientName: profile.name
       };
       setEntries(prev => [newEntry, ...prev]);
     }
@@ -94,7 +98,7 @@ export function MedicalRecordManager() {
   const renderPatientAlert = () => (
     <Alert className="bg-primary/10 border-primary/30">
       <ShieldCheck className="h-5 w-5 text-primary" />
-      <AlertTitle className="font-headline text-primary">Seu Prontuário Médico</AlertTitle>
+      <AlertTitle className="font-headline text-primary">Prontuário Médico de {profile.name}</AlertTitle>
       <AlertDescription>
         Este é um registro de seus eventos médicos importantes. As entradas são adicionadas por profissionais de saúde.
       </AlertDescription>
@@ -104,9 +108,9 @@ export function MedicalRecordManager() {
   const renderDoctorAlert = () => (
      <Alert className="bg-primary/10 border-primary/30">
       <ShieldCheck className="h-5 w-5 text-primary" />
-      <AlertTitle className="font-headline text-primary">Prontuário Médico de {profile.name}</AlertTitle>
+      <AlertTitle className="font-headline text-primary">Prontuário Médico de Pacientes</AlertTitle>
       <AlertDescription>
-        Visualize o histórico completo, filtre por tipo de entrada e adicione novos registros ao prontuário do paciente.
+        Visualize o histórico completo, filtre por tipo de entrada e adicione novos registros ao prontuário dos pacientes.
       </AlertDescription>
     </Alert>
   );
@@ -152,7 +156,7 @@ export function MedicalRecordManager() {
         
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>{entryToEdit ? 'Editar Entrada no Prontuário' : 'Nova Entrada no Prontuário'}</DialogTitle>
+            <DialogTitle>{entryToEdit ? `Editar Entrada para ${entryToEdit.patientName}`: 'Nova Entrada no Prontuário'}</DialogTitle>
           </DialogHeader>
           <NewMedicalRecordEntryForm
             onSubmit={handleFormSubmit}

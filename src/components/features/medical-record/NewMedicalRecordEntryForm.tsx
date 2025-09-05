@@ -20,7 +20,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Save, Ban, Paperclip } from 'lucide-react';
 import type { MedicalRecordEntry, MedicalRecordEntryType } from '@/lib/types';
 
-type MedicalRecordFormValues = Omit<MedicalRecordEntry, 'id' | 'childId'>;
+// Omit patientName as it's not edited here, it comes from the entry itself.
+type MedicalRecordFormValues = Omit<MedicalRecordEntry, 'id' | 'childId' | 'patientName'>;
 
 const entryTypes: MedicalRecordEntryType[] = ['Consulta', 'Emergência', 'Exame', 'Vacinação', 'Observação'];
 

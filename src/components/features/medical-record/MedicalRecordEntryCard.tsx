@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Stethoscope, AlertTriangle, FileText, Syringe, Edit3, Trash2, Paperclip, Tag } from "lucide-react";
+import { Stethoscope, AlertTriangle, FileText, Syringe, Edit3, Trash2, Paperclip, Tag, User } from "lucide-react";
 
 interface MedicalRecordEntryCardProps {
   entry: MedicalRecordEntry;
@@ -47,9 +47,14 @@ export function MedicalRecordEntryCard({ entry, onEdit, onDelete, persona }: Med
           </CardTitle>
           <Badge variant="outline" className="text-sm">{entry.entryType}</Badge>
         </div>
-        <CardDescription>
-          {dateTimeString}
-          {entry.professionalOrLocation && ` - ${entry.professionalOrLocation}`}
+        <CardDescription className="flex flex-col gap-1 pt-2">
+           {persona === 'medico' && (
+             <span className="flex items-center gap-2 font-medium text-foreground">
+                <User className="h-4 w-4 text-muted-foreground" /> 
+                Paciente: {entry.patientName}
+            </span>
+           )}
+          <span>{dateTimeString} {entry.professionalOrLocation && ` - ${entry.professionalOrLocation}`}</span>
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-3">

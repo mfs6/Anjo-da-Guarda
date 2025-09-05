@@ -70,9 +70,10 @@ export type MedicalRecordEntryType = 'Consulta' | 'Emergência' | 'Exame' | 'Vac
 export interface MedicalRecordEntry {
   id: string;
   childId: string;
+  patientName: string; // Added patient name
   entryType: MedicalRecordEntryType;
   date: string; // YYYY-MM-DD
-  time: string; // HH:MM, optional
+  time: string; // HH:MM
   title: string; // e.g., "Consulta de Rotina", "Febre Alta - PS Infantil"
   professionalOrLocation?: string; // e.g., "Dr. Ana Silva" or "PS Infantil ABC"
   summary: string; // Detailed notes, diagnosis, treatment
