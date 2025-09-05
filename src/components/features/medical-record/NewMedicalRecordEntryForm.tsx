@@ -27,8 +27,8 @@ const entryTypes: MedicalRecordEntryType[] = ['Consulta', 'Emergência', 'Exame'
 const medicalRecordSchema = z.object({
   title: z.string().min(1, { message: 'O título é obrigatório.' }),
   entryType: z.enum(entryTypes, { required_error: 'O tipo de entrada é obrigatório.' }),
-  date: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), { message: 'Data inválida. Use o formato AAAA-MM-DD.' }),
-  time: z.string().regex(/^\d{2}:\d{2}$/, { message: 'Horário inválido. Use o formato HH:MM.' }).optional().or(z.literal("")),
+  date: z.string().refine((date) => /^\d{4}-\d{2}-\d{2}$/.test(date), { message: 'Data inválida.' }),
+  time: z.string().regex(/^\d{2}:\d{2}$/, { message: 'Horário inválido. Use o formato HH:MM.' }),
   professionalOrLocation: z.string().min(1, { message: 'O profissional ou local é obrigatório.' }),
   summary: z.string().optional(),
   attachments: z.any().optional(), // Simplificado por enquanto
@@ -120,7 +120,7 @@ export function NewMedicalRecordEntryForm({
                 name="time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Horário (Opcional)</FormLabel>
+                    <FormLabel>Horário</FormLabel>
                     <FormControl>
                       <Input type="time" {...field} />
                     </FormControl>
