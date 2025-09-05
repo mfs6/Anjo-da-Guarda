@@ -13,6 +13,7 @@ export interface DoctorProfile {
   name: string;
   crm: string;
   specialty: string;
+  profilePictureUrl?: string;
 }
 
 export interface Vaccine {

@@ -117,24 +117,28 @@ export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
     name: "Dra. Ana Silva",
     crm: "11111",
     specialty: "Pediatra",
+    profilePictureUrl: "https://placehold.co/200x200/42A5F5/FFFFFF/png?text=AS"
   },
   {
     id: "dentistDoctor",
     name: "Dr. Carlos Oliveira",
     crm: "22222",
     specialty: "Dentista Pediátrico",
+    profilePictureUrl: "https://placehold.co/200x200/26A69A/FFFFFF/png?text=CO"
   },
   {
     id: "opthalmologistDoctor",
-    name: "Dr. João Santos",
+    name: "Dra. João Santos",
     crm: "33333",
     specialty: "Oftalmologista",
+    profilePictureUrl: "https://placehold.co/200x200/7E57C2/FFFFFF/png?text=JS"
   },
   {
     id: "physiotherapistDoctor",
     name: "Dr. Pedro Lima",
     crm: "44444",
     specialty: "Fisioterapeuta",
+    profilePictureUrl: "https://placehold.co/200x200/FF7043/FFFFFF/png?text=PL"
   }
 ];
 
@@ -231,7 +235,7 @@ export const INITIAL_MEDICAL_RECORD_ENTRIES: MedicalRecordEntry[] = [
     date: formatDate(lastWeek),
     time: '09:00',
     title: 'Consulta Oftalmológica',
-    professionalOrLocation: 'Dr. João Santos - Visão Kids Oftalmologia',
+    professionalOrLocation: 'Dra. João Santos - Visão Kids Oftalmologia',
     summary: 'Teste da visão realizado. Acuidade visual normal para a idade. Sem necessidade de correção no momento. Retorno em 1 ano.',
     attachments: [{ name: 'ExameVisual.pdf', url: '#' }]
   },
