@@ -19,7 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AppLogo } from "@/components/AppLogo";
 import { NAV_ITEMS, APP_NAME } from "@/lib/constants";
-import type { NavItem } from "@/lib/types";
+import type { NavItem, ChildProfile } from "@/lib/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { LogOut } from "lucide-react";
 import { Card } from "./ui/card";
@@ -33,6 +33,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const sidebarContext = useSidebar();
   const isMobile = sidebarContext.isMobile;
   const [persona, setPersona] = useState<Persona | null>(null);
+  const [childProfile, setChildProfile] = useState<ChildProfile | null>(null);
   const [filteredNavItems, setFilteredNavItems] = useState<NavItem[]>([]);
 
   useEffect(() => {
@@ -40,8 +41,16 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       const storedPersona = localStorage.getItem('userPersona') as Persona;
       if (storedPersona) {
         setPersona(storedPersona);
+        if (storedPersona === 'paciente') {
+            const storedChildProfile = localStorage.getItem('childProfile');
+            if (storedChildProfile) {
+              setChildProfile(JSON.parse(storedChildProfile));
+            } else {
+              router.push('/'); // No child profile, redirect to login
+            }
+        }
       } else {
-        router.push('/');
+        router.push('/'); // No persona, redirect to login
       }
     }
   }, [router]);
@@ -59,6 +68,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.removeItem('userPersona');
       localStorage.removeItem('doctorProfile');
+      localStorage.removeItem('childProfile');
     }
   };
 
@@ -116,11 +126,11 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
               {currentTitle}
             </h1>
           </div>
-          {persona === 'paciente' && (
+          {persona === 'paciente' && childProfile && (
             <Link href="/profile">
               <Avatar className="h-9 w-9 cursor-pointer">
-                <AvatarImage src="https://placehold.co/100x100.png" alt="User Avatar" data-ai-hint="child avatar" />
-                <AvatarFallback>AN</AvatarFallback>
+                <AvatarImage src={childProfile.profilePictureUrl || "https://placehold.co/100x100.png"} alt="User Avatar" data-ai-hint="child avatar" />
+                <AvatarFallback>{childProfile.name?.[0]?.toUpperCase() ?? 'A'}</AvatarFallback>
               </Avatar>
             </Link>
           )}

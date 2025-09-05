@@ -1,4 +1,5 @@
 
+
 import type { Vaccine, Milestone, NutritionTip, ChildProfile, Appointment, MedicalRecordEntry, NavItem, DoctorProfile } from './types';
 import { CalendarDays, Syringe, Star, Apple, Stethoscope, User, ShieldCheck, Activity, Baby, Users, FileText, HeartPulse } from 'lucide-react';
 
@@ -13,7 +14,7 @@ export const NAV_ITEMS: NavItem[] = [
   { title: "Consultas", href: "/appointments", icon: Users, persona: 'all' },
   { title: "Prontuário", href: "/medical-record", icon: ShieldCheck, persona: 'all' },
   { title: "Perfil", href: "/profile", icon: User, persona: 'paciente' },
-  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'all' },
+  { title: "Vacinas", href: "/vaccines", icon: Syringe, persona: 'paciente' },
 ];
 
 export const INITIAL_VACCINES: Vaccine[] = [
@@ -80,25 +81,29 @@ export const MOCK_CHILD_PROFILES: ChildProfile[] = [
     id: "child1",
     name: "Rafael Sabino",
     dob: "2023-03-15", // YYYY-MM-DD
-    profilePictureUrl: "https://images3.alphacoders.com/654/654249.png"
+    profilePictureUrl: "https://images3.alphacoders.com/654/654249.png",
+    cpf: "11122233344"
   },
   {
     id: "child2",
     name: "Laura Mendes",
     dob: "2022-11-20", // YYYY-MM-DD
-    profilePictureUrl: "https://placehold.co/200x200/E8C3A9/4A2719?text=LM&font=sans"
+    profilePictureUrl: "https://placehold.co/200x200/E8C3A9/4A2719?text=LM&font=sans",
+    cpf: "22233344455"
   },
   {
     id: "child3",
     name: "Miguel Costa",
     dob: "2024-01-10", // YYYY-MM-DD
-    profilePictureUrl: "https://placehold.co/200x200/B2D8E6/2E4045?text=MC&font=sans"
+    profilePictureUrl: "https://placehold.co/200x200/B2D8E6/2E4045?text=MC&font=sans",
+    cpf: "33344455566"
   },
   {
     id: "child4",
     name: "Sofia Almeida",
     dob: "2023-08-05", // YYYY-MM-DD
-    profilePictureUrl: "https://placehold.co/200x200/F0D9E7/5B3A4F?text=SA&font=sans"
+    profilePictureUrl: "https://placehold.co/200x200/F0D9E7/5B3A4F?text=SA&font=sans",
+    cpf: "44455566677"
   }
 ];
 

@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
-import { MOCK_DOCTOR_PROFILES } from '@/lib/constants';
+import { MOCK_DOCTOR_PROFILES, MOCK_CHILD_PROFILES } from '@/lib/constants';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function WelcomePage() {
@@ -43,8 +43,15 @@ export default function WelcomePage() {
             setLoginError('CRM não encontrado. Por favor, verifique o número e tente novamente.');
         }
     } else {
-        // Patient login logic remains the same
-        router.push('/dashboard');
+        const childProfile = MOCK_CHILD_PROFILES.find(child => child.cpf === cpf);
+        if (childProfile) {
+             if (typeof window !== 'undefined') {
+                localStorage.setItem('childProfile', JSON.stringify(childProfile));
+            }
+            router.push('/dashboard');
+        } else {
+            setLoginError('CPF não encontrado. Por favor, verifique o número e tente novamente.');
+        }
     }
   };
 
@@ -62,6 +69,13 @@ export default function WelcomePage() {
             </div>
           <h2 className="text-2xl font-headline font-bold text-accent mb-4">Acesso do Paciente</h2>
           <form onSubmit={handleFormSubmit} className="space-y-4">
+             {loginError && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Erro de Acesso</AlertTitle>
+                <AlertDescription>{loginError}</AlertDescription>
+              </Alert>
+            )}
             <div>
               <Label htmlFor="cpf" className="sr-only">CPF</Label>
               <Input 

@@ -5,6 +5,7 @@ export interface ChildProfile {
   name: string;
   dob: string; // YYYY-MM-DD for simplicity
   profilePictureUrl?: string;
+  cpf: string; // Added CPF for login
 }
 
 export interface DoctorProfile {
