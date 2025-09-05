@@ -92,7 +92,7 @@ export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
   {
     id: "dentistDoctor",
     name: "Dr. Carlos Oliveira",
-    crm: "54321",
+    crm: "22222",
     specialty: "Dentista Pediátrico",
   },
   {
