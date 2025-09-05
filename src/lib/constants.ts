@@ -98,13 +98,13 @@ export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
   {
     id: "opthalmologistDoctor",
     name: "Dr. João Santos",
-    crm: "67890",
+    crm: "33333",
     specialty: "Oftalmologista",
   },
   {
     id: "physiotherapistDoctor",
     name: "Dra. Pedro Lima",
-    crm: "09876",
+    crm: "44444",
     specialty: "Fisioterapeuta",
   }
 ];

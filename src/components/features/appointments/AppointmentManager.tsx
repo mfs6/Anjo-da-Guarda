@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import type { Appointment, ChildProfile, SymptomCheckerResult } from "@/lib/types";
+import type { Appointment, ChildProfile, DoctorProfile, SymptomCheckerResult } from "@/lib/types";
 import { INITIAL_APPOINTMENTS, MOCK_CHILD_PROFILE } from "@/lib/constants";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AppointmentCard } from "./AppointmentCard";
 import { DoctorAppointmentCard } from "./DoctorAppointmentCard";
-import { Users, PlusCircle, ArrowRight, ArrowLeft, CalendarDays } from "lucide-react";
+import { Users, PlusCircle, ArrowRight, ArrowLeft, CalendarDays, UserCheck } from "lucide-react";
 import { parseISO, isFuture, isPast } from 'date-fns';
 import { AppointmentScheduler } from './AppointmentScheduler';
 import { SymptomChecker } from '../symptoms/SymptomChecker';
@@ -27,6 +27,7 @@ export function AppointmentManager() {
   const [step, setStep] = useState<'symptoms' | 'triageResult' | 'schedule'>('symptoms');
   const [symptomResult, setSymptomResult] = useState<SymptomCheckerResult | null>(null);
   const [persona, setPersona] = useState<Persona | null>(null);
+  const [doctorProfile, setDoctorProfile] = useState<DoctorProfile | null>(null);
 
 
   useEffect(() => {
@@ -34,6 +35,13 @@ export function AppointmentManager() {
     if (typeof window !== 'undefined') {
       const storedPersona = localStorage.getItem('userPersona') as Persona;
       setPersona(storedPersona);
+
+      if (storedPersona === 'medico') {
+        const storedDoctorProfile = localStorage.getItem('doctorProfile');
+        if (storedDoctorProfile) {
+          setDoctorProfile(JSON.parse(storedDoctorProfile));
+        }
+      }
     }
   }, []);
 
@@ -161,13 +169,24 @@ export function AppointmentManager() {
   );
 
   const renderDoctorView = () => (
-     <Alert className="bg-primary/10 border-primary/30">
-        <CalendarDays className="h-5 w-5 text-primary" />
-        <AlertTitle className="font-headline text-primary">Agenda de Consultas</AlertTitle>
-        <AlertDescription>
-          Visualize todas as consultas agendadas e o histórico. O status pode ser atualizado para manter os registros em dia.
-        </AlertDescription>
-      </Alert>
+     <>
+        {doctorProfile && (
+           <Alert className="bg-primary/10 border-primary/30">
+             <UserCheck className="h-5 w-5 text-primary" />
+             <AlertTitle className="font-headline text-primary">Boas-vindas, {doctorProfile.name}!</AlertTitle>
+             <AlertDescription>
+                Especialidade: {doctorProfile.specialty}. Visualize suas consultas agendadas e o histórico.
+             </AlertDescription>
+           </Alert>
+        )}
+        <Alert className="bg-primary/10 border-primary/30">
+            <CalendarDays className="h-5 w-5 text-primary" />
+            <AlertTitle className="font-headline text-primary">Agenda de Consultas</AlertTitle>
+            <AlertDescription>
+            Visualize todas as consultas agendadas e o histórico. O status pode ser atualizado para manter os registros em dia.
+            </AlertDescription>
+        </Alert>
+     </>
   );
 
   return (

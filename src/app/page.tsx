@@ -4,21 +4,25 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AppLogo } from '@/components/AppLogo';
-import { ArrowRight, Stethoscope, Baby, KeyRound, Undo2 } from 'lucide-react';
+import { ArrowRight, Stethoscope, Baby, KeyRound, Undo2, AlertTriangle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useRouter } from 'next/navigation';
+import { MOCK_DOCTOR_PROFILES } from '@/lib/constants';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export default function WelcomePage() {
   const [selectedPersona, setSelectedPersona] = useState<'paciente' | 'medico' | null>(null);
   const [cpf, setCpf] = useState("");
   const [crm, setCrm] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
   const router = useRouter();
 
 
   const handlePersonaSelect = (persona: 'paciente' | 'medico') => {
+    setLoginError(null);
     if (typeof window !== 'undefined') {
       localStorage.setItem('userPersona', persona);
     }
@@ -27,9 +31,19 @@ export default function WelcomePage() {
 
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoginError(null);
     if (selectedPersona === 'medico') {
-        router.push('/appointments');
+        const doctorProfile = MOCK_DOCTOR_PROFILES.find(doc => doc.crm === crm);
+        if (doctorProfile) {
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('doctorProfile', JSON.stringify(doctorProfile));
+            }
+            router.push('/appointments');
+        } else {
+            setLoginError('CRM não encontrado. Por favor, verifique o número e tente novamente.');
+        }
     } else {
+        // Patient login logic remains the same
         router.push('/dashboard');
     }
   };
@@ -85,6 +99,13 @@ export default function WelcomePage() {
             </div>
           <h2 className="text-2xl font-headline font-bold text-primary mb-4">Acesso Médico</h2>
           <form onSubmit={handleFormSubmit} className="space-y-4">
+             {loginError && (
+              <Alert variant="destructive">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Erro de Acesso</AlertTitle>
+                <AlertDescription>{loginError}</AlertDescription>
+              </Alert>
+            )}
             <div>
               <Label htmlFor="crm" className="sr-only">CRM</Label>
               <Input 
