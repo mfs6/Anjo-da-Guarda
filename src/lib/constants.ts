@@ -117,28 +117,28 @@ export const MOCK_DOCTOR_PROFILES: DoctorProfile[] = [
     name: "Dra. Ana Silva",
     crm: "11111",
     specialty: "Pediatra",
-    profilePictureUrl: "https://placehold.co/200x200/42A5F5/FFFFFF/png?text=AS"
+    profilePictureUrl: "https://i.pinimg.com/736x/21/99/10/21991045be14a8c6af491cae7557ae9d.jpg"
   },
   {
     id: "dentistDoctor",
-    name: "Dr. Carlos Oliveira",
+    name: "Dra. Carla Mendes",
     crm: "22222",
     specialty: "Dentista Pediátrico",
-    profilePictureUrl: "https://placehold.co/200x200/26A69A/FFFFFF/png?text=CO"
+    profilePictureUrl: "https://i.redd.it/fights-i-feel-we-shouldve-gotten-for-sakura-v0-ae0yk4c2bone1.jpg?width=736&format=pjpg&auto=webp&s=e90bcecf7d574ab99849e7ffa03bc5be453b9360"
   },
   {
     id: "opthalmologistDoctor",
-    name: "Dra. João Santos",
+    name: "Dr. João Santos",
     crm: "33333",
     specialty: "Oftalmologista",
-    profilePictureUrl: "https://placehold.co/200x200/7E57C2/FFFFFF/png?text=JS"
+    profilePictureUrl: "https://image.geekship.com.br/uV0c28Jq9xPZ_GJGzii2kajj5zk=/1200x1200/smart/filters:strip_icc():format(webp)/hull.geekship.com.br/wp-content/uploads/2024/06/image-67.png"
   },
   {
     id: "physiotherapistDoctor",
     name: "Dr. Pedro Lima",
     crm: "44444",
     specialty: "Fisioterapeuta",
-    profilePictureUrl: "https://placehold.co/200x200/FF7043/FFFFFF/png?text=PL"
+    profilePictureUrl: "https://t.ctcdn.com.br/diY3hBxC35G5W4zHuG_-Hid7XtU=/900x675/smart/i799243.jpeg"
   }
 ];
 
