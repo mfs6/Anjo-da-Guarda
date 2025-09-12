@@ -5,10 +5,9 @@ import type { Vaccine } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, AlertCircle, Clock, Syringe, Bot } from "lucide-react";
+import { CheckCircle2, AlertCircle, Clock, Syringe } from "lucide-react";
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import Link from 'next/link';
 
 interface VaccineCardProps {
   vaccine: Vaccine;
@@ -58,12 +57,6 @@ export function VaccineCard({ vaccine, onUpdateStatus }: VaccineCardProps) {
         )}
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row justify-end items-center gap-2 pt-4">
-        <Button variant="outline" size="sm" asChild className="w-full sm:w-auto">
-            <Link href="https://chat.example.com/vaccine-support" target="_blank">
-                <Bot className="mr-2 h-4 w-4" />
-                Tirar Dúvidas
-            </Link>
-        </Button>
         {vaccine.status === 'pending' && (
           <Button size="sm" onClick={handleAdminister} className="bg-primary hover:bg-primary/90 w-full sm:w-auto">
             <CheckCircle2 className="mr-2 h-4 w-4" /> Marcar como Administrada

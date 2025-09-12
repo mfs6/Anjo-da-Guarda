@@ -7,9 +7,10 @@ import { VaccineCard } from "./VaccineCard";
 import { INITIAL_VACCINES, MOCK_CHILD_PROFILE, calculateAgeInMonths } from "@/lib/constants";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Syringe, FileText } from "lucide-react";
+import { Syringe, FileText, Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { addMonths, format, differenceInCalendarDays, parseISO } from 'date-fns';
+import Link from 'next/link';
 
 // Enhanced logic to update vaccine status based on age and due dates
 const getUpdatedVaccineStatus = (vaccine: Vaccine, childDob: string): Vaccine => {
@@ -114,8 +115,14 @@ export function VaccineList() {
         </AlertDescription>
       </Alert>
 
-      <div className="flex justify-end my-4">
-        <Button onClick={handleGenerateReport} className="bg-accent text-accent-foreground hover:bg-accent/90">
+      <div className="flex flex-col sm:flex-row justify-end items-center gap-2 my-4">
+        <Button variant="outline" asChild className="w-full sm:w-auto">
+            <Link href="https://chat.example.com/vaccine-support" target="_blank">
+                <Bot className="mr-2 h-5 w-5" />
+                Tirar Dúvidas com IA
+            </Link>
+        </Button>
+        <Button onClick={handleGenerateReport} className="bg-accent text-accent-foreground hover:bg-accent/90 w-full sm:w-auto">
           <FileText className="mr-2 h-5 w-5" />
           Gerar Relatório PDF
         </Button>
