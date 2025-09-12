@@ -117,7 +117,7 @@ export function VaccineList() {
 
       <div className="flex flex-col sm:flex-row justify-end items-center gap-2 my-4">
         <Button variant="outline" asChild className="w-full sm:w-auto">
-            <Link href="https://chat.example.com/vaccine-support" target="_blank">
+            <Link href="https://typebot.co/gotinhabot" target="_blank">
                 <Bot className="mr-2 h-5 w-5" />
                 Tirar Dúvidas com IA
             </Link>
